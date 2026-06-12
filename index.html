@@ -38,8 +38,8 @@
         h1, h2, h3 { margin-bottom: 15px; color: var(--primary-dark); }
         
         /* Cards & Containers */
-        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
-        .card { background: var(--white); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid #e8f5e9; }
+        .container { padding: 10px 15px; max-width: 800px; margin: 0 auto; }
+        .card { background: var(--white); border-radius: 10px; padding: 15px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid #e8f5e9; }
         
         /* Form & Inputs */
         .form-group { margin-bottom: 15px; }
@@ -73,70 +73,19 @@
         .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
 
-        /* Dashboard Stats - Compact & Dense Design */
-        .stat-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 10px;
-        }
-        
-        .stat-card { 
-            background: var(--white); 
-            border: 1px solid #e0e0e0;
-            padding: 10px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+        /* Dashboard Stats */
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .stat-card { background: var(--primary-light); color: var(--white); padding: 10px; border-radius: 8px; text-align: center; }
+        .stat-card.full { grid-column: span 2; background: var(--primary); }
+        .stat-card.small { padding: 8px; }
+        .stat-card.small div:first-child { font-size: 11px; }
+        .stat-card.small .stat-value { font-size: 16px; margin-top: 2px; }
+        .stat-value { font-size: 18px; font-weight: bold; margin-top: 3px; }
 
-        /* Card Khusus Utama (Total Pendapatan & Berat) */
-        .stat-card.main { 
-            grid-column: span 2; 
-            background: var(--primary-dark); 
-            color: white; 
-            border: none;
-            padding: 12px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .stat-card.main .main-info { text-align: left; }
-        .stat-card.main .main-val { text-align: right; }
-
-        /* Typography dalam Card */
-        .stat-title { 
-            font-size: 11px; 
-            color: #757575; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .stat-value { 
-            font-size: 18px; 
-            font-weight: 700; 
-            color: var(--primary-dark);
-            line-height: 1.2;
-        }
-        .stat-subtitle { 
-            font-size: 9px; 
-            color: #9e9e9e; 
-            margin-top: 2px;
-        }
-
-        /* Warna Khusus Teks Card */
-        .text-danger { color: var(--danger) !important; }
-        .text-warning { color: #f57c00 !important; }
-
-        /* Table Compact */
-        table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        th, td { border-bottom: 1px solid #ddd; padding: 8px 6px; text-align: left; font-size: 13px;}
-        th { background: #f4f9f4; color: var(--primary-dark); font-weight: 600; font-size: 12px; text-transform: uppercase;}
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: var(--primary); color: white; }
 
         /* Toast Notification */
         #toast {
@@ -161,10 +110,9 @@
             display: flex; 
             flex-direction: column; 
         }
-        
-        #view-dashboard > .lahan-indicator { flex-shrink: 0; }
-        #view-dashboard > .card:nth-child(2) { flex-shrink: 0; margin-bottom: 15px; }
-        #view-input > .card:first-child { flex-shrink: 0; margin-bottom: 15px; }
+        #view-dashboard > .lahan-indicator { flex-shrink: 0; margin-bottom: 10px; }
+        #view-dashboard > .card:nth-child(2) { flex-shrink: 0; margin-bottom: 10px; }
+        #view-input > .card:first-child { flex-shrink: 0; margin-bottom: 10px; }
         #view-dashboard > .card:last-child, #view-input > .card:last-child { 
             flex-grow: 1; 
             display: flex; 
@@ -179,20 +127,6 @@
         }
         #tabel-riwayat-grup::-webkit-scrollbar, #tabel-input-grup::-webkit-scrollbar { width: 5px; }
         #tabel-riwayat-grup::-webkit-scrollbar-thumb, #tabel-input-grup::-webkit-scrollbar-thumb { background-color: var(--primary-light); border-radius: 5px; }
-
-        /      <!-- Print Specific Styles -->
-        @media print {
-            .no-print { display: none !important; }
-            body { padding: 0; background: white; color: black; }
-            .card { box-shadow: none; border: 1px solid #000; margin-bottom: 10px; break-inside: avoid; }
-            
-            /* Pastikan elemen cetak terlihat */
-            #print-area { display: block !important; }
-            
-            .stat-card { background: transparent; color: black; border: 1px solid black; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #000 !important; padding: 5px; }
-        }
 
         /* --- DESAIN INPUT DINAMIS & HIGHLIGHT --- */
         @keyframes pulse-border {
@@ -243,6 +177,20 @@
             animation: none;
             box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.2);
         }
+
+        /* Print Specific Styles */
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; background: white; color: black; }
+            .card { box-shadow: none; border: 1px solid #000; margin-bottom: 10px; break-inside: avoid; }
+            .stat-card { background: transparent; color: black; border: 1px solid black; }
+            .stat-card.full { background: transparent; }
+            th { background: #eee; color: black; border: 1px solid #000; }
+            td { border: 1px solid #000; }
+            #main-app { padding: 0; }
+            #view-dashboard, #view-input { height: auto; display: block; }
+            #tabel-riwayat-grup, #tabel-input-grup { overflow: visible; }
+        }
     </style>
 </head>
 <body>
@@ -276,66 +224,65 @@
         <div id="view-dashboard" class="container view-section">
             
             <!-- Indikator Lahan Aktif -->
-            <div class="card no-print lahan-indicator" style="background: var(--primary-dark); color: white; padding: 12px 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; border-radius: 8px;">
-                <div style="font-size: 13px;">
+            <div class="card no-print lahan-indicator" style="background: var(--primary-dark); color: white; padding: 10px 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-radius: 8px;">
+                <div style="font-size: 12px;">
                     <i class="fas fa-map-marker-alt"></i> Lahan Aktif:<br>
-                    <strong id="label-lahan-dashboard" style="font-size: 16px;">Belum Dipilih</strong>
+                    <strong id="label-lahan-dashboard" style="font-size: 15px;">Belum Dipilih</strong>
                 </div>
-                <button class="btn btn-secondary" style="width: auto; padding: 6px 10px; font-size: 11px; background: white; color: var(--primary-dark);" onclick="switchTab('lahan', document.querySelectorAll('.nav-item')[2])">
+                <button class="btn btn-secondary" style="width: auto; padding: 5px 10px; font-size: 11px; background: white; color: var(--primary-dark);" onclick="switchTab('lahan', document.querySelectorAll('.nav-item')[2])">
                     Ganti Lahan
                 </button>
             </div>
 
-            <!-- Ringkasan Panen Compact -->
-            <div class="card no-print" style="padding: 15px;">
-                <h2 style="font-size: 16px; margin-bottom: 12px;"><i class="fas fa-chart-pie"></i> Ringkasan Panen</h2>
+            <div class="card no-print">
+                <h2 style="font-size: 16px; margin-bottom: 10px;"><i class="fas fa-chart-pie"></i> Ringkasan Panen</h2>
                 
                 <div class="stat-grid">
                     <!-- Baris 1: Total Utama (Dua Box Tersendiri) -->
                     <div class="stat-card" style="background: var(--primary-dark); color: white; border: none;">
-                        <div class="stat-title" style="color: rgba(255,255,255,0.8);"><i class="fas fa-money-bill-wave" style="color: #c8e6c9;"></i> Pendapatan</div>
-                        <div class="stat-value" id="val-pendapatan-kotor" style="color: white; font-size: 18px;">Rp 0</div>
-                        <div class="stat-subtitle" style="color: rgba(255,255,255,0.7);">Total x Harga</div>
+                        <div class="stat-title" style="color: rgba(255,255,255,0.8); font-size: 11px;"><i class="fas fa-money-bill-wave" style="color: #c8e6c9;"></i> Pendapatan</div>
+                        <div class="stat-value" id="val-pendapatan-kotor" style="color: white; font-size: 16px;">Rp 0</div>
+                        <small style="color: rgba(255,255,255,0.7); font-size: 9px;">Total x Harga</small>
                     </div>
                     <div class="stat-card" style="background: var(--primary); color: white; border: none;">
-                        <div class="stat-title" style="color: rgba(255,255,255,0.8);"><i class="fas fa-weight" style="color: #c8e6c9;"></i> Timbangan</div>
-                        <div class="stat-value" id="val-total-berat" style="color: white; font-size: 18px;">0 Kg</div>
-                        <div class="stat-subtitle" style="color: rgba(255,255,255,0.7);">Keseluruhan</div>
+                        <div class="stat-title" style="color: rgba(255,255,255,0.8); font-size: 11px;"><i class="fas fa-weight" style="color: #c8e6c9;"></i> Timbangan</div>
+                        <div class="stat-value" id="val-total-berat" style="color: white; font-size: 16px;">0 Kg</div>
+                        <small style="color: rgba(255,255,255,0.7); font-size: 9px;">Keseluruhan</small>
                     </div>
 
                     <!-- Baris 2: Biaya (Setengah Width) -->
-                    <div class="stat-card">
-                        <div class="stat-title"><i class="fas fa-tractor" style="color:var(--danger)"></i> Biaya Kombi</div>
-                        <div class="stat-value text-danger" id="val-biaya-kombi">Rp 0</div>
-                        <div class="stat-subtitle">per 100 kg</div>
+                    <div class="stat-card small" style="background: var(--danger);">
+                        <div>Biaya Kombi</div>
+                        <div class="stat-value" id="val-biaya-kombi">Rp 0</div>
+                        <small style="font-size: 9px;">(per 100kg)</small>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-title"><i class="fas fa-people-carry" style="color:var(--danger)"></i> Biaya Manol</div>
-                        <div class="stat-value text-danger" id="val-biaya-manol">Rp 0</div>
-                        <div class="stat-subtitle">per 100 kg</div>
+                    <div class="stat-card small" style="background: var(--danger);">
+                        <div>Biaya Manol</div>
+                        <div class="stat-value" id="val-biaya-manol">Rp 0</div>
+                        <small style="font-size: 9px;">(per 100kg)</small>
                     </div>
 
                     <!-- Baris 3: Karung (Setengah Width) -->
-                    <div class="stat-card">
-                        <div class="stat-title"><i class="fas fa-shopping-bag" style="color:#f57c00"></i> Est. 2 Karung</div>
-                        <div class="stat-value text-warning" id="val-karung-2">0</div>
-                        <div class="stat-subtitle">2 karung / timbangan</div>
+                    <div class="stat-card small" style="background: #f57c00;">
+                        <div>Jumlah Karung</div>
+                        <div class="stat-value" id="val-karung-2">0</div>
+                        <small style="font-size: 9px;">(2 / Timb)</small>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-title"><i class="fas fa-shopping-bag" style="color:#f57c00"></i> Est. 1 Karung</div>
-                        <div class="stat-value text-warning" id="val-karung-1">0</div>
-                        <div class="stat-subtitle">1 karung / timbangan</div>
+                    <div class="stat-card small" style="background: #ff9800;">
+                        <div>Jumlah Karung</div>
+                        <div class="stat-value" id="val-karung-1">0</div>
+                        <small style="font-size: 9px;">(1 / Timb)</small>
                     </div>
                 </div>
 
-                <button class="btn btn-secondary no-print" style="margin-top: 12px; padding: 8px; font-size: 13px; background: #e0e0e0; color: #333;" onclick="cetakLaporan()">
+                <button class="btn btn-secondary no-print" style="margin-top: 10px; padding: 10px; font-size: 14px;" onclick="cetakLaporan()">
                     <i class="fas fa-print"></i> Cetak Laporan PDF
                 </button>
             </div>
 
-            <div class="card" style="padding: 15px; display: flex; flex-direction: column;">
-                <h3 style="font-size: 15px; margin-bottom: 10px;"><i class="fas fa-list"></i> Riwayat Timbangan</h3>
-                <div id="tabel-riwayat-grup" style="margin: -5px -10px 0 -10px; padding: 0 10px;">
+            <div class="card">
+                <h3 style="font-size: 15px; margin-bottom: 5px;"><i class="fas fa-list"></i> Riwayat Timbangan</h3>
+                <div id="tabel-riwayat-grup">
                     <!-- Data per 5 baris akan dirender di sini -->
                 </div>
             </div>
@@ -372,8 +319,8 @@
                 </div>
 
                 <div style="background: var(--primary); color: white; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-                    <div style="font-size: 20px;">Total Keseluruhan Timbangan</div>
-                    <div style="font-size: 40px; font-weight: bold;" id="val-total-berat-input">0 Kg</div>
+                    <div style="font-size: 12px;">Total Keseluruhan Timbangan</div>
+                    <div style="font-size: 20px; font-weight: bold;" id="val-total-berat-input">0 Kg</div>
                 </div>
 
                 <!-- Area Input Dinamis Baru -->
@@ -571,7 +518,6 @@
                 appData.lahan[res.id] = { nama: nama, timestamp: new Date().toISOString(), timbangan: {} };
                 document.getElementById("input-nama-lahan").value = "";
                 showToast("Lahan baru berhasil dibuat!");
-                
                 pilihLahan(res.id); 
             }
         }
@@ -582,7 +528,6 @@
             renderDaftarLahan();
             kalkulasiDanRender();
             showToast("Lahan aktif diubah!");
-            
             switchTab('dashboard', document.querySelectorAll('.nav-item')[0]);
         }
 
@@ -685,9 +630,7 @@
             btnSimpan.style.backgroundColor = '#f57c00';
             document.getElementById("btn-batal-edit").classList.remove('hidden');
             
-            // Tambahkan class dinamis untuk merubah warna background form input
             document.getElementById("input-highlight-box").classList.add('edit-mode');
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
             showToast("Mode Edit Aktif", false);
         }
@@ -701,21 +644,18 @@
             btnSimpan.style.backgroundColor = 'var(--primary)';
             document.getElementById("btn-batal-edit").classList.add('hidden');
             
-            // Kembalikan form ke warna hijau original
             document.getElementById("input-highlight-box").classList.remove('edit-mode');
         }
 
         async function hapusTimbangan(id) {
             if(!confirm("Yakin ingin menghapus data timbangan ini?")) return;
             
-            // Tambahan: Batalkan mode edit otomatis jika data yang dihapus sedang diedit
             if (editModeId === id) {
                 batalEdit();
             }
             
             const res = await fetchAPI({ action: "delete_timbangan", lahan_id: activeLahanId, id: id });
             
-            // Perbaikan: Tambahkan penanganan error agar tombol tidak terlihat "mati"
             if (res && res.success) {
                 showToast("Data berhasil dihapus!");
                 delete appData.lahan[activeLahanId].timbangan[id];
@@ -723,7 +663,6 @@
             } else if (res && res.error) {
                 showToast("Peringatan Server: " + res.error, true);
                 console.error("Error penghapusan:", res.error);
-                // Fallback: Tetap hapus secara visual di aplikasi agar UI lancar
                 delete appData.lahan[activeLahanId].timbangan[id];
                 kalkulasiDanRender();
             } else {
@@ -759,13 +698,10 @@
             const dataArray = Object.values(timbanganAktif);
             jumlahTimbangan = dataArray.length;
             
-            dataArray.forEach(item => {
-                totalBerat += parseFloat(item.berat);
-            });
+            dataArray.forEach(item => { totalBerat += parseFloat(item.berat); });
 
             const pendapatanKotor = totalBerat * (appData.settings.harga_gabah || 0);
             const biayaKombi = (totalBerat / 100) * (appData.settings.kombi_per_100 || 0);
-            // Perbaikan Rumus: Biaya Manol sekarang dihitung per 100 kg (Total Berat dibagi 100)
             const biayaManol = (totalBerat / 100) * (appData.settings.manol_per_kg || 0);
 
             document.getElementById("val-total-berat").innerText = Math.round(totalBerat) + " Kg";
@@ -787,18 +723,17 @@
             let htmlDashboard = '';
             let chunkIndex = 0;
 
-            // BLOK FOR LOOP YANG KEMBALI DIMASUKKAN
             for (let i = 0; i < dataAsc.length; i += 5) {
                 const chunk = dataAsc.slice(i, i + 5);
                 chunkIndex++;
                 let subtotal = 0;
 
-                const headerSama = `<div style="border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px; margin-bottom: 10px; background: #fff;">
-                <div style="margin-bottom: 6px; color: var(--primary-dark); font-size: 12px; font-weight: bold;">Kelompok ${chunkIndex} <span style="color:#999; font-weight:normal;">(Baris ${i + 1} - ${i + chunk.length})</span></div>
-                <div style="overflow-x:auto;"><table style="width: 100%; margin-top: 0;">`;
+                const headerSama = `<div style="border: 2px dashed var(--primary-light); border-radius: 8px; padding: 10px; margin-bottom: 15px; background: #fafafa;">
+                <h4 style="margin-bottom: 10px; color: var(--primary-dark); font-size: 14px;">Kelompok ${chunkIndex} (Baris ${i + 1} - ${i + chunk.length})</h4>
+                <div style="overflow-x:auto;"><table style="width: 100%; font-size: 13px; margin-top: 0;">`;
 
-                htmlInput += headerSama + `<thead><tr><th style="width:10%">No</th><th>Waktu</th><th>Berat</th><th style="text-align:right;">Aksi</th></tr></thead><tbody>`;
-                htmlDashboard += headerSama + `<thead><tr><th style="width:10%">No</th><th>Waktu</th><th style="text-align:right;">Berat</th></tr></thead><tbody>`;
+                htmlInput += headerSama + `<thead><tr><th>No</th><th>Waktu</th><th>Berat</th><th>Aksi</th></tr></thead><tbody>`;
+                htmlDashboard += headerSama + `<thead><tr><th>No</th><th>Waktu</th><th>Berat</th></tr></thead><tbody>`;
 
                 chunk.forEach((item, idx) => {
                     const b = parseFloat(item.berat);
@@ -806,38 +741,33 @@
                     const waktuSaja = formatTanggal(item.timestamp).split(',')[1] || formatTanggal(item.timestamp);
                     const displayBerat = Math.round(b);
                     
-                    const barisDataInput = `<tr>
-                        <td style="color:#777;">${i + idx + 1}</td>
+                    const barisDataSama = `<tr>
+                        <td>${i + idx + 1}</td>
                         <td>${waktuSaja.trim()}</td>
                         <td><strong>${displayBerat} Kg</strong></td>`;
-                        
-                    const barisDataDashboard = `<tr>
-                        <td style="color:#777;">${i + idx + 1}</td>
-                        <td>${waktuSaja.trim()}</td>
-                        <td style="text-align:right;"><strong>${displayBerat} Kg</strong></td></tr>`;
 
-                    htmlInput += barisDataInput + `
-                        <td style="text-align:right; white-space: nowrap;">
-                            <button onclick="mulaiEdit('${item.id}')" class="btn" title="Edit" style="background: #f57c00; padding: 4px 8px; font-size: 11px; width: auto; margin-right: 2px;">
+                    htmlInput += barisDataSama + `
+                        <td style="text-align:center; white-space: nowrap;">
+                            <button onclick="mulaiEdit('${item.id}')" class="btn" title="Edit" style="background: #f57c00; padding: 4px 8px; font-size: 12px; width: auto; margin-right: 2px;">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="hapusTimbangan('${item.id}')" class="btn btn-danger" title="Hapus" style="padding: 4px 8px; font-size: 11px; width: auto; margin:0;">
+                            <button onclick="hapusTimbangan('${item.id}')" class="btn btn-danger" title="Hapus" style="padding: 4px 8px; font-size: 12px; width: auto; margin:0;">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     </tr>`;
 
-                    htmlDashboard += barisDataDashboard;
+                    htmlDashboard += barisDataSama + `</tr>`;
                 });
 
                 const displaySubtotal = Math.round(subtotal);
 
                 htmlInput += `</tbody>`;
-                htmlInput += `<tfoot><tr style="background: #f4f9f4;"><td colspan="2" style="text-align: right; padding: 8px 6px; font-size:12px;">Subtotal:</td><td colspan="2" style="padding: 8px 6px; color: var(--primary-dark); font-size: 14px; font-weight:bold;">${displaySubtotal} Kg</td></tr></tfoot>`;
+                htmlInput += `<tfoot><tr style="background: #e8f5e9;"><th colspan="2" style="text-align: right; padding: 10px;">Jumlah Kelompok ${chunkIndex}:</th><th colspan="2" style="padding: 10px; color: var(--primary-dark); font-size: 15px;">${displaySubtotal} Kg</th></tr></tfoot>`;
                 htmlInput += `</table></div></div>`;
 
                 htmlDashboard += `</tbody>`;
-                htmlDashboard += `<tfoot><tr style="background: #f4f9f4;"><td colspan="2" style="text-align: right; padding: 8px 6px; font-size:12px;">Subtotal:</td><td style="padding: 8px 6px; color: var(--primary-dark); font-size: 14px; font-weight:bold; text-align:right;">${displaySubtotal} Kg</td></tr></tfoot>`;
+                htmlDashboard += `<tfoot><tr style="background: #e8f5e9;"><th colspan="2" style="text-align: right; padding: 10px;">Jumlah Kelompok ${chunkIndex}:</th><th style="padding: 10px; color: var(--primary-dark); font-size: 15px;">${displaySubtotal} Kg</th></tr></tfoot>`;
                 htmlDashboard += `</table></div></div>`;
             }
 
@@ -849,59 +779,128 @@
             }
         }
 
-                // --- CETAK LAPORAN ---
-   
+        // --- CETAK LAPORAN ---
         function cetakLaporan() {
-            // Kita buat elemen sementara untuk menampung semua data agar rapi saat dicetak
-            let printContent = `
-                <div style="font-family: Arial, sans-serif; padding: 20px;">
-                    <h2 style="text-align: center;">Laporan Panen: ${appData.lahan[activeLahanId]?.nama || 'Laporan'}</h2>
-                    <p style="text-align: center;">Tanggal Cetak: ${new Date().toLocaleString('id-ID')}</p>
-                    <hr>
-            `;
+            if (!activeLahanId || !appData.lahan[activeLahanId]) {
+                alert("Tidak ada data lahan aktif untuk dicetak.");
+                return;
+            }
 
-            // Ambil semua data tanpa filter slice
-            const dataAsc = Object.entries(appData.lahan[activeLahanId].timbangan || {}).map(([id, data]) => ({id, ...data}))
+            const lahan = appData.lahan[activeLahanId];
+            const timbanganAktif = lahan.timbangan || {};
+            const dataAsc = Object.entries(timbanganAktif).map(([id, data]) => ({id, ...data}))
                                     .sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-            printContent += `<table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                <thead>
-                    <tr style="background: #f4f4f4;">
-                        <th style="border: 1px solid #000; padding: 8px;">No</th>
-                        <th style="border: 1px solid #000; padding: 8px;">Waktu</th>
-                        <th style="border: 1px solid #000; padding: 8px;">Berat (Kg)</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+            let totalBerat = 0;
+            const jumlahTimbangan = dataAsc.length;
+            dataAsc.forEach(item => totalBerat += parseFloat(item.berat));
 
-            let total = 0;
-            dataAsc.forEach((item, idx) => {
-                const b = parseFloat(item.berat);
-                total += b;
+            const pendapatanKotor = totalBerat * (appData.settings.harga_gabah || 0);
+            const biayaKombi = (totalBerat / 100) * (appData.settings.kombi_per_100 || 0);
+            const biayaManol = (totalBerat / 100) * (appData.settings.manol_per_kg || 0);
+
+            let printContent = `
+                <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;">
+                    <h2 style="text-align: center; color: #005005; margin-bottom: 5px;">LAPORAN HASIL PANEN</h2>
+                    <h3 style="text-align: center; margin-top: 0; color: #555;">Lahan: ${lahan.nama}</h3>
+                    <p style="text-align: center; font-size: 12px; color: #888; margin-bottom: 20px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+                    
+                    <hr style="border: 1px solid #2e7d32; margin-bottom: 15px;">
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
+                        <tr>
+                            <td style="padding: 6px 0; font-weight: bold; width: 25%;">Pendapatan Kotor</td>
+                            <td style="padding: 6px 0; color: #2e7d32; font-weight: bold; font-size: 15px; width: 25%;">: ${formatRupiah(pendapatanKotor)}</td>
+                            <td style="padding: 6px 0; font-weight: bold; width: 25%;">Total Timbangan</td>
+                            <td style="padding: 6px 0; font-weight: bold; font-size: 15px; width: 25%;">: ${Math.round(totalBerat)} Kg</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0; border-top: 1px dashed #ccc;">Biaya Kombi <span style="font-size:10px; color:#666;">(per 100kg)</span></td>
+                            <td style="padding: 6px 0; color: #d32f2f; border-top: 1px dashed #ccc;">: ${formatRupiah(biayaKombi)}</td>
+                            <td style="padding: 6px 0; border-top: 1px dashed #ccc;">Jml Karung <span style="font-size:10px; color:#666;">(Est. 2/timb)</span></td>
+                            <td style="padding: 6px 0; border-top: 1px dashed #ccc;">: ${jumlahTimbangan * 2} Karung</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0; border-top: 1px dashed #ccc;">Biaya Manol <span style="font-size:10px; color:#666;">(per 100kg)</span></td>
+                            <td style="padding: 6px 0; color: #d32f2f; border-top: 1px dashed #ccc;">: ${formatRupiah(biayaManol)}</td>
+                            <td style="padding: 6px 0; border-top: 1px dashed #ccc;">Jml Karung <span style="font-size:10px; color:#666;">(Est. 1/timb)</span></td>
+                            <td style="padding: 6px 0; border-top: 1px dashed #ccc;">: ${jumlahTimbangan} Karung</td>
+                        </tr>
+                    </table>
+
+                    <h3 style="color: #005005; border-bottom: 2px solid #e8f5e9; padding-bottom: 5px; margin-bottom: 15px;">Riwayat Timbangan (Per Kelompok)</h3>
+            `;
+
+            let chunkIndex = 0;
+            for (let i = 0; i < dataAsc.length; i += 5) {
+                const chunk = dataAsc.slice(i, i + 5);
+                chunkIndex++;
+                let subtotal = 0;
+
                 printContent += `
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">${idx + 1}</td>
-                        <td style="border: 1px solid #000; padding: 8px;">${formatTanggal(item.timestamp)}</td>
-                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Math.round(b)} Kg</td>
-                    </tr>`;
-            });
+                    <div style="margin-bottom: 25px; page-break-inside: avoid;">
+                        <strong style="font-size: 14px; display: block; margin-bottom: 8px;">Kelompok ${chunkIndex} <span style="font-weight:normal; color:#666; font-size:12px;">(Baris ${i + 1} - ${i + chunk.length})</span></strong>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr style="background: #f4f9f4;">
+                                    <th style="border: 1px solid #aaa; padding: 8px; width: 10%; color:#005005;">No</th>
+                                    <th style="border: 1px solid #aaa; padding: 8px; width: 50%; color:#005005;">Waktu (Tgl & Jam)</th>
+                                    <th style="border: 1px solid #aaa; padding: 8px; width: 40%; text-align: right; color:#005005;">Berat (Kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
 
-            printContent += `
-                </tbody>
-                <tfoot>
-                    <tr style="font-weight: bold; background: #eee;">
-                        <td colspan="2" style="border: 1px solid #000; padding: 8px; text-align: right;">Total Keseluruhan:</td>
-                        <td style="border: 1px solid #000; padding: 8px; text-align: center;">${Math.round(total)} Kg</td>
-                    </tr>
-                </tfoot>
-            </table>
-            </div>`;
+                chunk.forEach((item, idx) => {
+                    const b = parseFloat(item.berat);
+                    subtotal += b;
+                    printContent += `
+                        <tr>
+                            <td style="border: 1px solid #aaa; padding: 6px 8px; text-align: center; color:#555;">${i + idx + 1}</td>
+                            <td style="border: 1px solid #aaa; padding: 6px 8px;">${formatTanggal(item.timestamp)}</td>
+                            <td style="border: 1px solid #aaa; padding: 6px 8px; text-align: right; font-weight:bold;">${Math.round(b)} Kg</td>
+                        </tr>
+                    `;
+                });
 
-            // Buka jendela cetak baru
+                printContent += `
+                            </tbody>
+                            <tfoot>
+                                <tr style="background: #e8f5e9;">
+                                    <td colspan="2" style="border: 1px solid #aaa; padding: 8px; text-align: right; font-size: 12px;">Subtotal Kelompok ${chunkIndex}:</td>
+                                    <td style="border: 1px solid #aaa; padding: 8px; text-align: right; font-weight: bold; font-size: 14px; color: #005005;">${Math.round(subtotal)} Kg</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                `;
+            }
+
+            if (dataAsc.length === 0) {
+                printContent += `<p style="text-align: center; color: #666; font-style: italic;">Belum ada data timbangan yang diinput pada lahan ini.</p>`;
+            } else {
+                 printContent += `
+                    <div style="margin-top: 30px; padding: 15px; background: #c8e6c9; border: 2px solid #2e7d32; text-align: right; border-radius: 8px;">
+                        <span style="font-size: 14px; margin-right: 15px;">Total Keseluruhan Lahan:</span>
+                        <strong style="font-size: 20px; color: #005005;">${Math.round(totalBerat)} Kg</strong>
+                    </div>
+                 `;
+            }
+
+            printContent += `</div>`;
+
             const win = window.open('', '_blank');
             win.document.write(printContent);
             win.document.close();
-            win.print();
+            
+            setTimeout(() => { win.print(); }, 300);
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:application/javascript,self.addEventListener("fetch",()=>{});')
+                .catch(err => console.log('SW setup skipped'));
+            });
         }
     </script>
 </body>
