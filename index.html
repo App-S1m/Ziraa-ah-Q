@@ -180,7 +180,7 @@
         #tabel-riwayat-grup::-webkit-scrollbar, #tabel-input-grup::-webkit-scrollbar { width: 5px; }
         #tabel-riwayat-grup::-webkit-scrollbar-thumb, #tabel-input-grup::-webkit-scrollbar-thumb { background-color: var(--primary-light); border-radius: 5px; }
 
-       <!-- Print Specific Styles -->
+        /      <!-- Print Specific Styles -->
         @media print {
             .no-print { display: none !important; }
             body { padding: 0; background: white; color: black; }
@@ -193,6 +193,7 @@
             table { width: 100%; border-collapse: collapse; }
             th, td { border: 1px solid #000 !important; padding: 5px; }
         }
+
         /* --- DESAIN INPUT DINAMIS & HIGHLIGHT --- */
         @keyframes pulse-border {
             0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
@@ -848,7 +849,7 @@
             }
         }
 
-        // --- CETAK LAPORAN ---
+                // --- CETAK LAPORAN ---
    
         function cetakLaporan() {
             // Kita buat elemen sementara untuk menampung semua data agar rapi saat dicetak
