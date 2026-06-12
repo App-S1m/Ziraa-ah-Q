@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Panen - Agro Green</title>
+    
+    <!-- PWA Setup Dasar -->
+    <meta name="theme-color" content="#2e7d32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22PanenKU%22%2C%22short_name%22%3A%22Panen%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%232e7d32%22%7D">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #60ad5e;
+            --primary-dark: #005005;
+            --bg-color: #f4f9f4;
+            --text-dark: #1b5e20;
+            --danger: #d32f2f;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 70px; }
+
+        /* Helpers */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        
+        /* Typography */
+        h1, h2, h3 { margin-bottom: 15px; color: var(--primary-dark); }
+        
+        /* Cards & Containers */
+        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .card { background: var(--white); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid #e8f5e9; }
+        
+        /* Form & Inputs */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
+        input[type="text"], input[type="number"], input[type="password"] {
+            width: 100%; padding: 12px; border: 2px solid #c8e6c9; border-radius: 8px; font-size: 16px; transition: 0.3s;
+        }
+        input:focus { outline: none; border-color: var(--primary); }
+        
+        /* Buttons */
+        .btn { 
+            background: var(--primary); color: var(--white); border: none; padding: 12px 20px; 
+            border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .btn-danger { background: var(--danger); }
+        .btn-secondary { background: #757575; }
+        
+        /* Login Screen */
+        #login-screen {
+            height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--primary); padding: 20px;
+        }
+        #login-screen .card { width: 100%; max-width: 400px; text-align: center; }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white); box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; border-top: 1px solid #e8f5e9;
+        }
+        .nav-item { text-align: center; color: #757575; text-decoration: none; font-size: 12px; flex: 1; cursor: pointer; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+
+        /* Dashboard Stats - Compact & Dense Design */
+        .stat-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px;
+        }
+        
+        .stat-card { 
+            background: var(--white); 
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Card Khusus Utama (Total Pendapatan & Berat) */
+        .stat-card.main { 
+            grid-column: span 2; 
+            background: var(--primary-dark); 
+            color: white; 
+            border: none;
+            padding: 12px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-card.main .main-info { text-align: left; }
+        .stat-card.main .main-val { text-align: right; }
+
+        /* Typography dalam Card */
+        .stat-title { 
+            font-size: 11px; 
+            color: #757575; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .stat-value { 
+            font-size: 18px; 
+            font-weight: 700; 
+            color: var(--primary-dark);
+            line-height: 1.2;
+        }
+        .stat-subtitle { 
+            font-size: 9px; 
+            color: #9e9e9e; 
+            margin-top: 2px;
+        }
+
+        /* Warna Khusus Teks Card */
+        .text-danger { color: var(--danger) !important; }
+        .text-warning { color: #f57c00 !important; }
+
+        /* Table Compact */
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        th, td { border-bottom: 1px solid #ddd; padding: 8px 6px; text-align: left; font-size: 13px;}
+        th { background: #f4f9f4; color: var(--primary-dark); font-weight: 600; font-size: 12px; text-transform: uppercase;}
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
+            border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 80px;
+            transform: translateX(-50%); font-size: 14px; transition: opacity 0.3s; opacity: 0;
+        }
+        #toast.show { visibility: visible; opacity: 1; }
+
+        /* Loader */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8);
+            display: flex; justify-content: center; align-items: center; z-index: 3000; flex-direction: column;
+        }
+        .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Dashboard & Input Layout Khusus (Fixed Header & Scrollable History) */
+        #view-dashboard, #view-input { 
+            height: calc(100vh - 70px); 
+            height: calc(100dvh - 70px); 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        #view-dashboard > .lahan-indicator { flex-shrink: 0; }
+        #view-dashboard > .card:nth-child(2) { flex-shrink: 0; margin-bottom: 15px; }
+        #view-input > .card:first-child { flex-shrink: 0; margin-bottom: 15px; }
+        #view-dashboard > .card:last-child, #view-input > .card:last-child { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            margin-bottom: 0; 
+        }
+        #tabel-riwayat-grup, #tabel-input-grup { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            padding-right: 5px; 
+        }
+        #tabel-riwayat-grup::-webkit-scrollbar, #tabel-input-grup::-webkit-scrollbar { width: 5px; }
+        #tabel-riwayat-grup::-webkit-scrollbar-thumb, #tabel-input-grup::-webkit-scrollbar-thumb { background-color: var(--primary-light); border-radius: 5px; }
+
+        /* Print Specific Styles */
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; background: white; color: black; }
+            .card { box-shadow: none; border: 1px solid #000; margin-bottom: 10px; break-inside: avoid; }
+            .stat-card { background: transparent; color: black; border: 1px solid black; }
+            .stat-card.full { background: transparent; }
+            th { background: #eee; color: black; border: 1px solid #000; }
+            td { border: 1px solid #000; }
+            #main-app { padding: 0; }
+            #view-dashboard, #view-input { height: auto; display: block; }
+            #tabel-riwayat-grup, #tabel-input-grup { overflow: visible; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Notifikasi Loader -->
+    <div id="loader" class="hidden">
+        <div class="spinner"></div>
+        <p style="margin-top: 10px; font-weight: bold; color: var(--primary);">Memproses Data...</p>
+    </div>
+
+    <!-- Notifikasi Toast -->
+    <div id="toast">Notifikasi</div>
+
+    <!-- Layar Login -->
+    <div id="login-screen">
+        <div class="card">
+            <i class="fas fa-leaf" style="font-size: 50px; color: var(--primary); margin-bottom: 15px;"></i>
+            <h2>Agro Green App</h2>
+            <p style="margin-bottom: 20px; color: #666;">Silakan login untuk masuk ke sistem.</p>
+            <div class="form-group">
+                <input type="password" id="passwordInput" placeholder="Masukkan Password Admin">
+            </div>
+            <button class="btn" onclick="appLogin()">Masuk <i class="fas fa-sign-in-alt"></i></button>
+        </div>
+    </div>
+
+    <!-- Aplikasi Utama -->
+    <div id="main-app" class="hidden">
+        
+        <!-- View: Dashboard -->
+        <div id="view-dashboard" class="container view-section">
+            
+            <!-- Indikator Lahan Aktif -->
+            <div class="card no-print lahan-indicator" style="background: var(--primary-dark); color: white; padding: 12px 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; border-radius: 8px;">
+                <div style="font-size: 13px;">
+                    <i class="fas fa-map-marker-alt"></i> Lahan Aktif:<br>
+                    <strong id="label-lahan-dashboard" style="font-size: 16px;">Belum Dipilih</strong>
+                </div>
+                <button class="btn btn-secondary" style="width: auto; padding: 6px 10px; font-size: 11px; background: white; color: var(--primary-dark);" onclick="switchTab('lahan', document.querySelectorAll('.nav-item')[2])">
+                    Ganti Lahan
+                </button>
+            </div>
+
+            <!-- Ringkasan Panen Compact -->
+            <div class="card no-print" style="padding: 15px;">
+                <h2 style="font-size: 16px; margin-bottom: 12px;"><i class="fas fa-chart-pie"></i> Ringkasan Panen</h2>
+                
+                <div class="stat-grid">
+                    <!-- Baris 1: Total Utama (Full Width) -->
+                    <div class="stat-card main">
+                        <div class="main-info">
+                            <div style="font-size: 11px; opacity: 0.8; text-transform: uppercase;">Estimasi Pendapatan</div>
+                            <div class="stat-value" id="val-pendapatan-kotor" style="color: white; font-size: 20px;">Rp 0</div>
+                            <div style="font-size: 10px; opacity: 0.7;">Berdasarkan total berat x harga gabah</div>
+                        </div>
+                        <div class="main-val">
+                            <div style="font-size: 11px; opacity: 0.8; text-transform: uppercase;">Total Timbangan</div>
+                            <div class="stat-value" id="val-total-berat" style="color: #c8e6c9; font-size: 20px;">0 Kg</div>
+                        </div>
+                    </div>
+
+                    <!-- Baris 2: Biaya (Setengah Width) -->
+                    <div class="stat-card">
+                        <div class="stat-title"><i class="fas fa-tractor" style="color:var(--danger)"></i> Biaya Kombi</div>
+                        <div class="stat-value text-danger" id="val-biaya-kombi">Rp 0</div>
+                        <div class="stat-subtitle">per 100 kg</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title"><i class="fas fa-people-carry" style="color:var(--danger)"></i> Biaya Manol</div>
+                        <div class="stat-value text-danger" id="val-biaya-manol">Rp 0</div>
+                        <div class="stat-subtitle">per 100 kg</div>
+                    </div>
+
+                    <!-- Baris 3: Karung (Setengah Width) -->
+                    <div class="stat-card">
+                        <div class="stat-title"><i class="fas fa-shopping-bag" style="color:#f57c00"></i> Est. 2 Karung</div>
+                        <div class="stat-value text-warning" id="val-karung-2">0</div>
+                        <div class="stat-subtitle">2 karung / timbangan</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title"><i class="fas fa-shopping-bag" style="color:#f57c00"></i> Est. 1 Karung</div>
+                        <div class="stat-value text-warning" id="val-karung-1">0</div>
+                        <div class="stat-subtitle">1 karung / timbangan</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary no-print" style="margin-top: 12px; padding: 8px; font-size: 13px; background: #e0e0e0; color: #333;" onclick="cetakLaporan()">
+                    <i class="fas fa-print"></i> Cetak Laporan PDF
+                </button>
+            </div>
+
+            <div class="card" style="padding: 15px; display: flex; flex-direction: column;">
+                <h3 style="font-size: 15px; margin-bottom: 10px;"><i class="fas fa-list"></i> Riwayat Timbangan</h3>
+                <div id="tabel-riwayat-grup" style="margin: -5px -10px 0 -10px; padding: 0 10px;">
+                    <!-- Data per 5 baris akan dirender di sini -->
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Kelola Lahan -->
+        <div id="view-lahan" class="container view-section hidden no-print">
+            <div class="card">
+                <h2><i class="fas fa-map"></i> Kelola Lahan Baru</h2>
+                <p style="margin-bottom: 15px; font-size: 0.9em; color: #666;">Buat lahan baru agar perhitungan data tidak tercampur.</p>
+                <div class="form-group">
+                    <label>Nama / Lokasi Lahan:</label>
+                    <input type="text" id="input-nama-lahan" placeholder="Contoh: Sawah Pak Budi (Utara)">
+                </div>
+                <button class="btn" onclick="buatLahan()"><i class="fas fa-plus"></i> Buat Lahan</button>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-list-ol"></i> Daftar Lahan Tersimpan</h3>
+                <p style="margin-bottom: 15px; font-size: 0.85em; color: #666;">Pilih lahan di bawah ini untuk melihat data atau melanjutkan input timbangan.</p>
+                <div id="list-lahan">
+                    <!-- List lahan akan dirender di sini -->
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Input Timbangan -->
+        <div id="view-input" class="container view-section hidden no-print">
+            <div class="card">
+                <h2><i class="fas fa-balance-scale"></i> Input Timbangan</h2>
+                <p style="margin-bottom: 10px; font-size: 0.9em; color: #666;">Memasukkan data untuk lahan:</p>
+                <div style="background: #e8f5e9; border: 1px solid var(--primary-light); padding: 8px; border-radius: 5px; margin-bottom: 15px; color: var(--primary-dark); font-weight: bold; text-align: center;">
+                    <i class="fas fa-map-marker-alt"></i> <span id="label-lahan-input">Belum Dipilih</span>
+                </div>
+
+                <div style="background: var(--primary); color: white; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
+                    <div style="font-size: 12px;">Total Keseluruhan Timbangan</div>
+                    <div style="font-size: 20px; font-weight: bold;" id="val-total-berat-input">0 Kg</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Berat Timbangan (Kg):</label>
+                    <input type="number" id="input-berat" placeholder="Contoh: 50.5" step="0.01">
+                </div>
+                <button class="btn" id="btn-simpan" onclick="simpanTimbangan()"><i class="fas fa-save"></i> Simpan Timbangan</button>
+                <button class="btn btn-secondary hidden" id="btn-batal-edit" onclick="batalEdit()" style="margin-top: 10px; background: #757575;"><i class="fas fa-times"></i> Batal Edit</button>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-clipboard-list"></i> Hasil Input (Per 5 Baris)</h3>
+                <div id="tabel-input-grup" style="margin-top: 10px;">
+                    <!-- Data per 5 baris akan dirender di sini -->
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Pengaturan -->
+        <div id="view-pengaturan" class="container view-section hidden no-print">
+            <div class="card">
+                <h2><i class="fas fa-cogs"></i> Pengaturan Biaya</h2>
+                <div class="form-group">
+                    <label>Harga Gabah (per Kg) - Rp:</label>
+                    <input type="number" id="setting-harga-gabah" placeholder="Contoh: 7500">
+                </div>
+                <div class="form-group">
+                    <label>Biaya Kombi (per 100 kg) - Rp:</label>
+                    <input type="number" id="setting-kombi" placeholder="Contoh: 50000">
+                </div>
+                <div class="form-group">
+                    <label>Biaya Manol/Angkat (per 100 kg) - Rp:</label>
+                    <input type="number" id="setting-manol" placeholder="Contoh: 15000">
+                </div>
+                <button class="btn" onclick="simpanPengaturan()"><i class="fas fa-check"></i> Perbarui Pengaturan</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav no-print">
+            <div class="nav-item active" onclick="switchTab('dashboard', this)">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('input', this)">
+                <i class="fas fa-plus-circle"></i>
+                <span>Input</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('lahan', this)">
+                <i class="fas fa-map"></i>
+                <span>Lahan</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('pengaturan', this)">
+                <i class="fas fa-cog"></i>
+                <span>Setting</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * KONFIGURASI URL GAS - Ganti dengan URL Web App GAS milik Anda
+         */
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzluXuYZYoWSG7oNnbAN_2DS7e5aekD2yLmhEN93DF0X-nWWnAaU48w8htYgShH81KJaw/exec"; 
+        
+        // State Management
+        let appData = {
+            settings: { kombi_per_100: 0, manol_per_kg: 0, harga_gabah: 0 },
+            lahan: {} 
+        };
+        
+        let editModeId = null; 
+        let activeLahanId = localStorage.getItem("activeLahanId") || null;
+
+        // --- SISTEM LOGIN ---
+        function appLogin() {
+            const pass = document.getElementById("passwordInput").value;
+            if (pass === "789") {
+                document.getElementById("login-screen").classList.add("hidden");
+                document.getElementById("main-app").classList.remove("hidden");
+                showToast("Login Berhasil!");
+                fetchDataAwal();
+            } else {
+                showToast("Password Salah!", true);
+            }
+        }
+
+        // --- UI UTILITIES ---
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? "var(--danger)" : "#333";
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        function showLoader(show) {
+            document.getElementById("loader").classList.toggle("hidden", !show);
+        }
+
+        function switchTab(tab, el) {
+            window.scrollTo(0, 0); 
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById('view-' + tab).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        function formatTanggal(isoString) {
+            const dt = new Date(isoString);
+            return dt.toLocaleString('id-ID', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+        }
+
+        // --- API KOMUNIKASI GAS & FIREBASE ---
+        async function fetchAPI(payload) {
+            const getMockResponse = (p) => {
+                console.warn("Menggunakan mode simulasi lokal untuk aksi:", p.action);
+                if (p.action === 'get_data') return { settings: appData.settings, lahan: appData.lahan };
+                if (p.action === 'save_lahan') return { success: true, id: "LHN_TEMP_" + Date.now() };
+                if (p.action === 'save_timbangan') return { success: true, id: p.id || "TMB_TEMP_" + Date.now() };
+                return { success: true };
+            };
+
+            if (GAS_URL === "URL_WEB_APP_GAS_ANDA_DISINI" || !GAS_URL.startsWith("http")) {
+                showToast("URL GAS belum diatur! Menjalankan mode lokal.", true);
+                return getMockResponse(payload);
+            }
+
+            try {
+                showLoader(true);
+                const response = await fetch(GAS_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                showLoader(false);
+                return result;
+            } catch (error) {
+                showLoader(false);
+                showToast("Koneksi server gagal. Beralih ke Mode Lokal.", true);
+                console.error("Fetch API Error:", error);
+                return getMockResponse(payload);
+            }
+        }
+
+        async function fetchDataAwal() {
+            const res = await fetchAPI({ action: "get_data" });
+            if (res) {
+                appData.settings = res.settings || { kombi_per_100: 0, manol_per_kg: 0, harga_gabah: 0 };
+                appData.lahan = res.lahan || {};
+                
+                if (res.timbangan && Object.keys(res.timbangan).length > 0) {
+                    const tempLahanId = "LHN_MIGRASI_LAMA";
+                    if (!appData.lahan[tempLahanId]) {
+                        appData.lahan[tempLahanId] = {
+                            nama: "Data Lahan Lama (Migrasi)",
+                            timestamp: new Date().toISOString(),
+                            timbangan: res.timbangan
+                        };
+                        fetchAPI({ action: "migrate_lama", lahan_id: tempLahanId, data: appData.lahan[tempLahanId] });
+                        
+                        if (!activeLahanId) {
+                            activeLahanId = tempLahanId;
+                            localStorage.setItem("activeLahanId", activeLahanId);
+                        }
+                    }
+                }
+
+                document.getElementById("setting-harga-gabah").value = appData.settings.harga_gabah || 0;
+                document.getElementById("setting-kombi").value = appData.settings.kombi_per_100 || 0;
+                document.getElementById("setting-manol").value = appData.settings.manol_per_kg || 0;
+                
+                renderDaftarLahan();
+                kalkulasiDanRender();
+            }
+        }
+
+        // --- FUNGSI KELOLA LAHAN ---
+        async function buatLahan() {
+            const nama = document.getElementById("input-nama-lahan").value;
+            if (!nama) return showToast("Nama lahan wajib diisi!", true);
+
+            const res = await fetchAPI({ action: "save_lahan", nama: nama });
+            if (res && res.success) {
+                appData.lahan[res.id] = { nama: nama, timestamp: new Date().toISOString(), timbangan: {} };
+                document.getElementById("input-nama-lahan").value = "";
+                showToast("Lahan baru berhasil dibuat!");
+                
+                pilihLahan(res.id); 
+            }
+        }
+
+        function pilihLahan(id) {
+            activeLahanId = id;
+            localStorage.setItem("activeLahanId", id);
+            renderDaftarLahan();
+            kalkulasiDanRender();
+            showToast("Lahan aktif diubah!");
+            
+            switchTab('dashboard', document.querySelectorAll('.nav-item')[0]);
+        }
+
+        async function hapusLahan(id) {
+            if (!confirm(`Yakin menghapus lahan "${appData.lahan[id].nama}"? SELURUH DATA TIMBANGAN DI DALAMNYA AKAN HILANG PERMANEN!`)) return;
+            
+            const res = await fetchAPI({ action: "delete_lahan", id: id });
+            if (res && res.success) {
+                delete appData.lahan[id];
+                if (activeLahanId === id) {
+                    activeLahanId = null;
+                    localStorage.removeItem("activeLahanId");
+                }
+                showToast("Lahan dihapus!");
+                renderDaftarLahan();
+                kalkulasiDanRender();
+            }
+        }
+
+        function renderDaftarLahan() {
+            let html = "";
+            const lahanArray = Object.entries(appData.lahan).map(([id, data]) => ({id, ...data}))
+                                     .sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            if (lahanArray.length === 0) {
+                html = "<p class='text-center' style='padding:20px 0;'>Belum ada lahan. Silakan buat lahan baru di atas.</p>";
+            } else {
+                lahanArray.forEach(l => {
+                    const isActive = l.id === activeLahanId;
+                    html += `
+                    <div style="border: 2px solid ${isActive ? 'var(--primary)' : '#e0e0e0'}; padding: 12px; margin-bottom: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background: ${isActive ? '#e8f5e9' : '#fff'}">
+                        <div>
+                            <strong style="font-size:16px; color: ${isActive ? 'var(--primary-dark)' : '#333'};">${l.nama}</strong><br>
+                            <small style="color:#777;">Dibuat: ${formatTanggal(l.timestamp)}</small>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            ${isActive ? 
+                                '<span style="color: var(--primary); font-weight: bold; align-self:center; margin-right: 5px;"><i class="fas fa-check-circle"></i> Aktif</span>' : 
+                                `<button class="btn" style="width: auto; padding: 6px 12px; font-size: 13px;" onclick="pilihLahan('${l.id}')">Buka</button>`}
+                            <button class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 13px;" onclick="hapusLahan('${l.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById("list-lahan").innerHTML = html;
+
+            const namaLahanAktif = activeLahanId && appData.lahan[activeLahanId] ? appData.lahan[activeLahanId].nama : "Belum Dipilih (Buka Menu Lahan)";
+            document.getElementById("label-lahan-dashboard").innerText = namaLahanAktif;
+            document.getElementById("label-lahan-input").innerText = namaLahanAktif;
+        }
+
+        // --- FUNGSI TIMBANGAN ---
+        async function simpanTimbangan() {
+            if (!activeLahanId || !appData.lahan[activeLahanId]) {
+                showToast("Pilih Lahan terlebih dahulu di Menu Lahan!", true);
+                switchTab('lahan', document.querySelectorAll('.nav-item')[2]);
+                return;
+            }
+
+            const berat = parseFloat(document.getElementById("input-berat").value);
+            if (!berat || berat <= 0) return showToast("Masukkan berat yang valid!", true);
+
+            const payload = { action: "save_timbangan", lahan_id: activeLahanId, berat: berat };
+            
+            if (editModeId) {
+                payload.id = editModeId;
+                payload.timestamp = appData.lahan[activeLahanId].timbangan[editModeId].timestamp;
+            }
+
+            const res = await fetchAPI(payload);
+            if (res && res.success) {
+                showToast(editModeId ? "Timbangan diperbarui!" : "Timbangan tersimpan!");
+                document.getElementById("input-berat").value = "";
+                
+                if (!appData.lahan[activeLahanId].timbangan) appData.lahan[activeLahanId].timbangan = {};
+
+                if (editModeId) {
+                    appData.lahan[activeLahanId].timbangan[editModeId].berat = berat;
+                } else {
+                    appData.lahan[activeLahanId].timbangan[res.id] = { berat: berat, timestamp: new Date().toISOString() };
+                }
+                
+                batalEdit();
+                kalkulasiDanRender();
+            }
+        }
+
+        function mulaiEdit(id) {
+            if (!activeLahanId || !appData.lahan[activeLahanId] || !appData.lahan[activeLahanId].timbangan[id]) return;
+            
+            const data = appData.lahan[activeLahanId].timbangan[id];
+            editModeId = id;
+            document.getElementById("input-berat").value = data.berat;
+            
+            const navInput = document.querySelectorAll('.nav-item')[1];
+            switchTab('input', navInput);
+            
+            const btnSimpan = document.getElementById("btn-simpan");
+            btnSimpan.innerHTML = '<i class="fas fa-edit"></i> Update Timbangan';
+            btnSimpan.style.backgroundColor = '#f57c00';
+            document.getElementById("btn-batal-edit").classList.remove('hidden');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("Mode Edit Aktif", false);
+        }
+
+        function batalEdit() {
+            editModeId = null;
+            document.getElementById("input-berat").value = "";
+            
+            const btnSimpan = document.getElementById("btn-simpan");
+            btnSimpan.innerHTML = '<i class="fas fa-save"></i> Simpan Timbangan';
+            btnSimpan.style.backgroundColor = 'var(--primary)';
+            document.getElementById("btn-batal-edit").classList.add('hidden');
+        }
+
+        async function hapusTimbangan(id) {
+            if(!confirm("Yakin ingin menghapus data timbangan ini?")) return;
+            
+            // Tambahan: Batalkan mode edit otomatis jika data yang dihapus sedang diedit
+            if (editModeId === id) {
+                batalEdit();
+            }
+            
+            const res = await fetchAPI({ action: "delete_timbangan", lahan_id: activeLahanId, id: id });
+            
+            // Perbaikan: Tambahkan penanganan error agar tombol tidak terlihat "mati"
+            if (res && res.success) {
+                showToast("Data berhasil dihapus!");
+                delete appData.lahan[activeLahanId].timbangan[id];
+                kalkulasiDanRender();
+            } else if (res && res.error) {
+                showToast("Peringatan Server: " + res.error, true);
+                console.error("Error penghapusan:", res.error);
+                // Fallback: Tetap hapus secara visual di aplikasi agar UI lancar
+                delete appData.lahan[activeLahanId].timbangan[id];
+                kalkulasiDanRender();
+            } else {
+                showToast("Terjadi kesalahan. Data dihapus dari tampilan lokal.", false);
+                delete appData.lahan[activeLahanId].timbangan[id];
+                kalkulasiDanRender();
+            }
+        }
+
+        async function simpanPengaturan() {
+            const hargaGabah = parseFloat(document.getElementById("setting-harga-gabah").value) || 0;
+            const kombi = parseFloat(document.getElementById("setting-kombi").value) || 0;
+            const manol = parseFloat(document.getElementById("setting-manol").value) || 0;
+
+            const res = await fetchAPI({ action: "save_settings", kombi: kombi, manol: manol, harga_gabah: hargaGabah });
+            if (res && res.success) {
+                showToast("Pengaturan diperbarui!");
+                appData.settings.harga_gabah = hargaGabah;
+                appData.settings.kombi_per_100 = kombi;
+                appData.settings.manol_per_kg = manol;
+                kalkulasiDanRender();
+            }
+        }
+
+        // --- KALKULASI & RENDER DOM ---
+        function kalkulasiDanRender() {
+            let totalBerat = 0;
+            let jumlahTimbangan = 0;
+
+            const timbanganAktif = (activeLahanId && appData.lahan[activeLahanId] && appData.lahan[activeLahanId].timbangan) 
+                                   ? appData.lahan[activeLahanId].timbangan : {};
+
+            const dataArray = Object.values(timbanganAktif);
+            jumlahTimbangan = dataArray.length;
+            
+            dataArray.forEach(item => {
+                totalBerat += parseFloat(item.berat);
+            });
+
+            const pendapatanKotor = totalBerat * (appData.settings.harga_gabah || 0);
+            const biayaKombi = (totalBerat / 100) * (appData.settings.kombi_per_100 || 0);
+            // Perbaikan Rumus: Biaya Manol sekarang dihitung per 100 kg (Total Berat dibagi 100)
+            const biayaManol = (totalBerat / 100) * (appData.settings.manol_per_kg || 0);
+
+            document.getElementById("val-total-berat").innerText = totalBerat.toFixed(2) + " Kg";
+            document.getElementById("val-total-berat-input").innerText = totalBerat.toFixed(2) + " Kg";
+            document.getElementById("val-pendapatan-kotor").innerText = formatRupiah(pendapatanKotor);
+            document.getElementById("val-biaya-kombi").innerText = formatRupiah(biayaKombi);
+            document.getElementById("val-biaya-manol").innerText = formatRupiah(biayaManol);
+            document.getElementById("val-karung-2").innerText = (jumlahTimbangan * 2);
+            document.getElementById("val-karung-1").innerText = jumlahTimbangan;
+
+            renderInputGroups(timbanganAktif);
+        }
+
+        function renderInputGroups(timbanganAktif) {
+            const dataAsc = Object.entries(timbanganAktif).map(([id, data]) => ({id, ...data}))
+                                    .sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+            let htmlInput = '';
+            let htmlDashboard = '';
+            let chunkIndex = 0;
+
+            // BLOK FOR LOOP YANG KEMBALI DIMASUKKAN
+            for (let i = 0; i < dataAsc.length; i += 5) {
+                const chunk = dataAsc.slice(i, i + 5);
+                chunkIndex++;
+                let subtotal = 0;
+
+                const headerSama = `<div style="border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px; margin-bottom: 10px; background: #fff;">
+                <div style="margin-bottom: 6px; color: var(--primary-dark); font-size: 12px; font-weight: bold;">Kelompok ${chunkIndex} <span style="color:#999; font-weight:normal;">(Baris ${i + 1} - ${i + chunk.length})</span></div>
+                <div style="overflow-x:auto;"><table style="width: 100%; margin-top: 0;">`;
+
+                htmlInput += headerSama + `<thead><tr><th style="width:10%">No</th><th>Waktu</th><th>Berat</th><th style="text-align:right;">Aksi</th></tr></thead><tbody>`;
+                htmlDashboard += headerSama + `<thead><tr><th style="width:10%">No</th><th>Waktu</th><th style="text-align:right;">Berat</th></tr></thead><tbody>`;
+
+                chunk.forEach((item, idx) => {
+                    const b = parseFloat(item.berat);
+                    subtotal += b;
+                    const waktuSaja = formatTanggal(item.timestamp).split(',')[1] || formatTanggal(item.timestamp);
+                    
+                    const barisDataInput = `<tr>
+                        <td style="color:#777;">${i + idx + 1}</td>
+                        <td>${waktuSaja.trim()}</td>
+                        <td><strong>${b} Kg</strong></td>`;
+                        
+                    const barisDataDashboard = `<tr>
+                        <td style="color:#777;">${i + idx + 1}</td>
+                        <td>${waktuSaja.trim()}</td>
+                        <td style="text-align:right;"><strong>${b} Kg</strong></td></tr>`;
+
+                    htmlInput += barisDataInput + `
+                        <td style="text-align:right; white-space: nowrap;">
+                            <button onclick="mulaiEdit('${item.id}')" class="btn" title="Edit" style="background: #f57c00; padding: 4px 8px; font-size: 11px; width: auto; margin-right: 2px;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="hapusTimbangan('${item.id}')" class="btn btn-danger" title="Hapus" style="padding: 4px 8px; font-size: 11px; width: auto; margin:0;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+
+                    htmlDashboard += barisDataDashboard;
+                });
+
+                htmlInput += `</tbody>`;
+                htmlInput += `<tfoot><tr style="background: #f4f9f4;"><td colspan="2" style="text-align: right; padding: 8px 6px; font-size:12px;">Subtotal:</td><td colspan="2" style="padding: 8px 6px; color: var(--primary-dark); font-size: 14px; font-weight:bold;">${subtotal.toFixed(2)} Kg</td></tr></tfoot>`;
+                htmlInput += `</table></div></div>`;
+
+                htmlDashboard += `</tbody>`;
+                htmlDashboard += `<tfoot><tr style="background: #f4f9f4;"><td colspan="2" style="text-align: right; padding: 8px 6px; font-size:12px;">Subtotal:</td><td style="padding: 8px 6px; color: var(--primary-dark); font-size: 14px; font-weight:bold; text-align:right;">${subtotal.toFixed(2)} Kg</td></tr></tfoot>`;
+                htmlDashboard += `</table></div></div>`;
+            }
+
+            document.getElementById('tabel-input-grup').innerHTML = htmlInput || "<p class='text-center' style='margin-top: 20px; font-size: 14px; color: #666;'>Lahan kosong. Belum ada data timbangan.</p>";
+            
+            const dashboardHistoryContainer = document.getElementById('tabel-riwayat-grup');
+            if (dashboardHistoryContainer) {
+                dashboardHistoryContainer.innerHTML = htmlDashboard || "<p class='text-center' style='margin-top: 20px; font-size: 14px; color: #666;'>Lahan kosong. Belum ada data timbangan.</p>";
+            }
+        }
+
+        // --- CETAK LAPORAN ---
+        function cetakLaporan() {
+            window.print();
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:application/javascript,self.addEventListener("fetch",()=>{});')
+                .catch(err => console.log('SW setup skipped'));
+            });
+        }
+    </script>
+</body>
+</html>
