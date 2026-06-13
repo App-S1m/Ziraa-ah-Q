@@ -74,7 +74,7 @@
         .nav-item.active { color: var(--primary); font-weight: bold; }
         .nav-item.active i { transform: scale(1.1); color: var(--primary); }
 
-        /* Menu Input Menonjol (Desain Timbul) */
+        /* Menu Input Menonjol */
         .nav-input-special { top: -15px; }
         .nav-input-special .input-fab {
             background: var(--primary); color: white; width: 45px; height: 45px; border-radius: 50%;
@@ -237,7 +237,6 @@
             <div class="card no-print">
                 <h2 style="font-size: 16px; margin-bottom: 10px;"><i class="fas fa-chart-pie"></i> Ringkasan Panen</h2>
                 <div class="stat-grid">
-                    <!-- Baris 1: Total Utama (Dua Box Tersendiri) -->
                     <div class="stat-card" style="background: var(--primary-dark); color: white; border: none;">
                         <div class="stat-title" style="color: rgba(255,255,255,0.8); font-size: 11px;"><i class="fas fa-money-bill-wave" style="color: #c8e6c9;"></i> Pendapatan</div>
                         <div class="stat-value" id="val-pendapatan-kotor" style="color: white; font-size: 16px;">Rp 0</div>
@@ -249,7 +248,6 @@
                         <small style="color: rgba(255,255,255,0.7); font-size: 9px;">Keseluruhan</small>
                     </div>
 
-                    <!-- Baris 2: Biaya (Setengah Width) -->
                     <div class="stat-card small" style="background: var(--danger);">
                         <div>Biaya Kombi</div>
                         <div class="stat-value" id="val-biaya-kombi">Rp 0</div>
@@ -261,7 +259,6 @@
                         <small style="font-size: 9px;">(per 100kg)</small>
                     </div>
 
-                    <!-- Baris 3: Karung (Setengah Width) -->
                     <div class="stat-card small" style="background: #f57c00;">
                         <div>Jumlah Karung</div>
                         <div class="stat-value" id="val-karung-2">0</div>
@@ -278,7 +275,7 @@
             <div class="card">
                 <h3 style="font-size: 15px; margin-bottom: 5px;"><i class="fas fa-list"></i> Riwayat Timbangan</h3>
                 <div id="tabel-riwayat-grup">
-                    <!-- Data per 5 baris akan dirender di sini -->
+                    <!-- Data per 5 baris -->
                 </div>
             </div>
         </div>
@@ -304,7 +301,7 @@
             <div class="card" style="padding: 10px 15px; display: flex; flex-direction: column;">
                 <h3 style="font-size: 14px; margin-bottom: 5px; color: var(--primary-dark);"><i class="fas fa-list-ul"></i> Semua Data Timbangan</h3>
                 <div id="tabel-riwayat-full" style="margin-top: 5px;">
-                    <!-- Data per 5 baris akan dirender di sini sama seperti di Input -->
+                    <!-- Data per 5 baris -->
                 </div>
             </div>
         </div>
@@ -337,7 +334,7 @@
             <div class="card">
                 <h3><i class="fas fa-clipboard-list"></i> Hasil Input (Per 5 Baris)</h3>
                 <div id="tabel-input-grup" style="margin-top: 10px;">
-                    <!-- Data per 5 baris akan dirender di sini -->
+                    <!-- Data per 5 baris -->
                 </div>
             </div>
         </div>
@@ -349,7 +346,7 @@
                 <p style="margin-bottom: 15px; font-size: 0.9em; color: #666;">Buat lahan baru agar perhitungan data tidak tercampur.</p>
                 <div class="form-group">
                     <label>Nama / Lokasi Lahan:</label>
-                    <input type="text" id="input-nama-lahan" placeholder="Contoh: Sawah Pak Budi (Utara)">
+                    <input type="text" id="input-nama-lahan" placeholder="Contoh: Sawah Pak Hasyimoto">
                 </div>
                 <button class="btn" onclick="buatLahan()"><i class="fas fa-plus"></i> Buat Lahan</button>
             </div>
@@ -358,7 +355,7 @@
                 <h3><i class="fas fa-list-ol"></i> Daftar Lahan Tersimpan</h3>
                 <p style="margin-bottom: 15px; font-size: 0.85em; color: #666;">Pilih lahan di bawah ini untuk melihat data atau melanjutkan input timbangan.</p>
                 <div id="list-lahan">
-                    <!-- List lahan akan dirender di sini -->
+                    <!-- List lahan -->
                 </div>
             </div>
         </div>
@@ -368,7 +365,6 @@
             <div class="card">
                 <h2><i class="fas fa-cogs"></i> Pengaturan Biaya</h2>
                 
-                <!-- Indikator Lahan di Setting -->
                 <p style="margin-bottom: 5px; font-size: 0.85em; color: #666;">Menerapkan harga dan biaya khusus untuk lahan:</p>
                 <div style="background: #e8f5e9; border: 1px solid var(--primary-light); padding: 8px; border-radius: 5px; margin-bottom: 15px; color: var(--primary-dark); font-weight: bold; text-align: center;">
                     <i class="fas fa-map-marker-alt"></i> <span id="label-lahan-pengaturan">Belum Dipilih</span>
@@ -429,7 +425,7 @@
         /**
          * KONFIGURASI URL GAS - Ganti dengan URL Web App GAS milik Anda
          */
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyVClhKVmR5Is-kHwEDM_LGTpIOEJvqJ6MXdDQo3bcdN6YDXE-ZbBjnyXgrg9Rj39yapQ/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxHWN8N4kUgX02kuZ0YS3Kjdpay967pfdcoWuwaMgePs13mWrwtwWsBhtvNRiewT6e4bA/exec"; 
         
         // State Management
         let appData = {
@@ -489,6 +485,7 @@
                 console.warn("Menggunakan mode simulasi lokal untuk aksi:", p.action);
                 if (p.action === 'get_data') return { lahan: appData.lahan };
                 if (p.action === 'save_lahan') return { success: true, id: "LHN_TEMP_" + Date.now() };
+                if (p.action === 'edit_lahan') return { success: true };
                 if (p.action === 'save_timbangan') return { success: true, id: p.id || "TMB_TEMP_" + Date.now() };
                 if (p.action === 'save_settings') return { success: true };
                 return { success: true };
@@ -565,6 +562,32 @@
             
             switchTab('dashboard', document.querySelectorAll('.nav-item')[0]);
         }
+        
+        // FUNGSI BARU: Edit Nama Lahan
+        async function editNamaLahan(id) {
+            const namaLama = appData.lahan[id].nama;
+            const namaBaru = prompt("Ubah nama lahan ini:", namaLama);
+            
+            // Pastikan tidak kosong dan tidak sama dengan yang lama
+            if (namaBaru && namaBaru.trim() !== "" && namaBaru !== namaLama) {
+                const res = await fetchAPI({ action: "edit_lahan", id: id, nama: namaBaru.trim() });
+                if (res && res.success) {
+                    appData.lahan[id].nama = namaBaru.trim();
+                    showToast("Nama lahan berhasil diperbarui!");
+                    
+                    renderDaftarLahan();
+                    
+                    // Update header secara manual jika lahan yang sedang aktif diedit
+                    if (activeLahanId === id) {
+                        const namaUpdate = namaBaru.trim();
+                        document.getElementById("label-lahan-dashboard").innerText = namaUpdate;
+                        document.getElementById("label-lahan-input").innerText = namaUpdate;
+                        if(document.getElementById("label-lahan-riwayat")) document.getElementById("label-lahan-riwayat").innerText = namaUpdate;
+                        if(document.getElementById("label-lahan-pengaturan")) document.getElementById("label-lahan-pengaturan").innerText = namaUpdate;
+                    }
+                }
+            }
+        }
 
         async function hapusLahan(id) {
             if (!confirm(`Yakin menghapus lahan "${appData.lahan[id].nama}"? SELURUH DATA TIMBANGAN DI DALAMNYA AKAN HILANG PERMANEN!`)) return;
@@ -575,7 +598,6 @@
                 if (activeLahanId === id) {
                     activeLahanId = null;
                     localStorage.removeItem("activeLahanId");
-                    // Kosongkan form setting karena lahan dihapus
                     populateSettingsForm(null);
                 }
                 showToast("Lahan dihapus!");
@@ -604,6 +626,8 @@
                             ${isActive ? 
                                 '<span style="color: var(--primary); font-weight: bold; align-self:center; margin-right: 5px;"><i class="fas fa-check-circle"></i> Aktif</span>' : 
                                 `<button class="btn" style="width: auto; padding: 6px 12px; font-size: 13px;" onclick="pilihLahan('${l.id}')">Buka</button>`}
+                            <!-- Tombol Edit Nama Lahan Baru -->
+                            <button class="btn" style="background: #f57c00; width: auto; padding: 6px 12px; font-size: 13px;" onclick="editNamaLahan('${l.id}')"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-danger" style="width: auto; padding: 6px 12px; font-size: 13px;" onclick="hapusLahan('${l.id}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>`;
