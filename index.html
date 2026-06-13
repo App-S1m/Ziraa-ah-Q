@@ -69,7 +69,6 @@
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white); box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; border-top: 1px solid #e8f5e9;
         }
-        /* Ukuran font diperkecil sedikit agar 5 menu muat di layar */
         .nav-item { text-align: center; color: #757575; text-decoration: none; font-size: 11px; flex: 1; cursor: pointer; position: relative; }
         .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; transition: 0.3s; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
@@ -189,19 +188,9 @@
         }
         
         /* Pewarnaan Khusus Saat Mode Edit Aktif */
-        .input-highlight-box.edit-mode {
-            background: #fff3e0;
-            border-color: #ffb74d;
-        }
-        .input-highlight-box.edit-mode label {
-            color: #e65100;
-        }
-        .input-highlight-box.edit-mode input[type="number"] {
-            border-color: #f57c00;
-            color: #e65100;
-            animation: none;
-            box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.2);
-        }
+        .input-highlight-box.edit-mode { background: #fff3e0; border-color: #ffb74d; }
+        .input-highlight-box.edit-mode label { color: #e65100; }
+        .input-highlight-box.edit-mode input[type="number"] { border-color: #f57c00; color: #e65100; animation: none; box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.2); }
     </style>
 </head>
 <body>
@@ -240,7 +229,6 @@
                     <i class="fas fa-map-marker-alt"></i> Lahan Aktif:<br>
                     <strong id="label-lahan-dashboard" style="font-size: 15px;">Belum Dipilih</strong>
                 </div>
-                <!-- Indeks dirubah ke [3] karena menu lahan bergeser urutannya -->
                 <button class="btn btn-secondary" style="width: auto; padding: 5px 10px; font-size: 11px; background: white; color: var(--primary-dark);" onclick="switchTab('lahan', document.querySelectorAll('.nav-item')[3])">
                     Ganti Lahan
                 </button>
@@ -248,7 +236,6 @@
 
             <div class="card no-print">
                 <h2 style="font-size: 16px; margin-bottom: 10px;"><i class="fas fa-chart-pie"></i> Ringkasan Panen</h2>
-                
                 <div class="stat-grid">
                     <!-- Baris 1: Total Utama (Dua Box Tersendiri) -->
                     <div class="stat-card" style="background: var(--primary-dark); color: white; border: none;">
@@ -296,43 +283,8 @@
             </div>
         </div>
 
-        <!-- View: Input Timbangan -->
-        <div id="view-input" class="container view-section hidden no-print">
-            <div class="card">
-                <h2><i class="fas fa-balance-scale"></i> Input Timbangan</h2>
-                <p style="margin-bottom: 10px; font-size: 0.9em; color: #666;">Memasukkan data untuk lahan:</p>
-                <div style="background: #e8f5e9; border: 1px solid var(--primary-light); padding: 8px; border-radius: 5px; margin-bottom: 15px; color: var(--primary-dark); font-weight: bold; text-align: center;">
-                    <i class="fas fa-map-marker-alt"></i> <span id="label-lahan-input">Belum Dipilih</span>
-                </div>
-
-                <div style="background: var(--primary); color: white; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-                    <div style="font-size: 12px;">Total Keseluruhan Timbangan</div>
-                    <div style="font-size: 20px; font-weight: bold;" id="val-total-berat-input">0 Kg</div>
-                </div>
-
-                <!-- Area Input Dinamis Baru -->
-                <div class="input-highlight-box" id="input-highlight-box">
-                    <label><i class="fas fa-keyboard"></i> Masukkan Berat (Kg)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="number" id="input-berat" placeholder="Contoh: 50" style="flex: 1;">
-                        <button class="btn" id="btn-simpan" onclick="simpanTimbangan()" style="width: auto; padding: 0 20px; white-space: nowrap;"><i class="fas fa-save"></i> Simpan</button>
-                    </div>
-                </div>
-                
-                <button class="btn btn-secondary hidden" id="btn-batal-edit" onclick="batalEdit()" style="margin-top: 5px; background: #757575;"><i class="fas fa-times"></i> Batal Edit</button>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-clipboard-list"></i> Hasil Input (Per 5 Baris)</h3>
-                <div id="tabel-input-grup" style="margin-top: 10px;">
-                    <!-- Data per 5 baris akan dirender di sini -->
-                </div>
-            </div>
-        </div>
-
-        <!-- View: Riwayat Penuh (BARU) -->
+        <!-- View: Riwayat Penuh -->
         <div id="view-riwayat" class="container view-section hidden no-print">
-            <!-- Header Riwayat -->
             <div class="card" style="padding: 10px 15px; display: flex; flex-direction: column; background: var(--primary-dark); color: white;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <div>
@@ -349,11 +301,43 @@
                 </button>
             </div>
             
-            <!-- Tabel Scroll Penuh -->
             <div class="card" style="padding: 10px 15px; display: flex; flex-direction: column;">
                 <h3 style="font-size: 14px; margin-bottom: 5px; color: var(--primary-dark);"><i class="fas fa-list-ul"></i> Semua Data Timbangan</h3>
                 <div id="tabel-riwayat-full" style="margin-top: 5px;">
                     <!-- Data per 5 baris akan dirender di sini sama seperti di Input -->
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Input Timbangan -->
+        <div id="view-input" class="container view-section hidden no-print">
+            <div class="card">
+                <h2><i class="fas fa-balance-scale"></i> Input Timbangan</h2>
+                <p style="margin-bottom: 10px; font-size: 0.9em; color: #666;">Memasukkan data untuk lahan:</p>
+                <div style="background: #e8f5e9; border: 1px solid var(--primary-light); padding: 8px; border-radius: 5px; margin-bottom: 15px; color: var(--primary-dark); font-weight: bold; text-align: center;">
+                    <i class="fas fa-map-marker-alt"></i> <span id="label-lahan-input">Belum Dipilih</span>
+                </div>
+
+                <div style="background: var(--primary); color: white; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
+                    <div style="font-size: 12px;">Total Keseluruhan Timbangan</div>
+                    <div style="font-size: 20px; font-weight: bold;" id="val-total-berat-input">0 Kg</div>
+                </div>
+
+                <div class="input-highlight-box" id="input-highlight-box">
+                    <label><i class="fas fa-keyboard"></i> Masukkan Berat (Kg)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="input-berat" placeholder="Contoh: 50" style="flex: 1;">
+                        <button class="btn" id="btn-simpan" onclick="simpanTimbangan()" style="width: auto; padding: 0 20px; white-space: nowrap;"><i class="fas fa-save"></i> Simpan</button>
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary hidden" id="btn-batal-edit" onclick="batalEdit()" style="margin-top: 5px; background: #757575;"><i class="fas fa-times"></i> Batal Edit</button>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-clipboard-list"></i> Hasil Input (Per 5 Baris)</h3>
+                <div id="tabel-input-grup" style="margin-top: 10px;">
+                    <!-- Data per 5 baris akan dirender di sini -->
                 </div>
             </div>
         </div>
@@ -379,10 +363,17 @@
             </div>
         </div>
 
-        <!-- View: Pengaturan -->
+        <!-- View: Pengaturan (BERDASARKAN LAHAN) -->
         <div id="view-pengaturan" class="container view-section hidden no-print">
             <div class="card">
                 <h2><i class="fas fa-cogs"></i> Pengaturan Biaya</h2>
+                
+                <!-- Indikator Lahan di Setting -->
+                <p style="margin-bottom: 5px; font-size: 0.85em; color: #666;">Menerapkan harga dan biaya khusus untuk lahan:</p>
+                <div style="background: #e8f5e9; border: 1px solid var(--primary-light); padding: 8px; border-radius: 5px; margin-bottom: 15px; color: var(--primary-dark); font-weight: bold; text-align: center;">
+                    <i class="fas fa-map-marker-alt"></i> <span id="label-lahan-pengaturan">Belum Dipilih</span>
+                </div>
+
                 <div class="form-group">
                     <label>Harga Gabah (per Kg) - Rp:</label>
                     <input type="number" id="setting-harga-gabah" placeholder="Contoh: 7500">
@@ -395,10 +386,10 @@
                     <label>Biaya Manol/Angkat (per 100 kg) - Rp:</label>
                     <input type="number" id="setting-manol" placeholder="Contoh: 15000">
                 </div>
-                <button class="btn" onclick="simpanPengaturan()"><i class="fas fa-check"></i> Perbarui Pengaturan</button>
+                <button class="btn" onclick="simpanPengaturan()"><i class="fas fa-check"></i> Perbarui Pengaturan Lahan</button>
             </div>
             
-            <!-- Tambahan: Informasi Copyright & Developer -->
+            <!-- Informasi Copyright & Developer -->
             <div style="text-align: center; margin-top: 35px; margin-bottom: 20px; color: #757575; font-size: 13px; line-height: 1.6;">
                 <p style="margin-bottom: 2px;">&copy; 2026 Sistem Panen - Agro Green App</p>
                 <p style="margin-bottom: 2px;">Developed by <strong>Hasyimoto</strong></p>
@@ -406,7 +397,7 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation (Urutan Baru & Input Menonjol) -->
+        <!-- Bottom Navigation -->
         <div class="bottom-nav no-print">
             <div class="nav-item active" onclick="switchTab('dashboard', this)">
                 <i class="fas fa-home"></i>
@@ -416,7 +407,6 @@
                 <i class="fas fa-history"></i>
                 <span>Riwayat</span>
             </div>
-            
             <!-- Tombol Tengah Menonjol -->
             <div class="nav-item nav-input-special" onclick="switchTab('input', this)">
                 <div class="input-fab">
@@ -424,7 +414,6 @@
                 </div>
                 <span style="display:block; margin-top:-2px;">Input</span>
             </div>
-            
             <div class="nav-item" onclick="switchTab('lahan', this)">
                 <i class="fas fa-map"></i>
                 <span>Lahan</span>
@@ -440,11 +429,10 @@
         /**
          * KONFIGURASI URL GAS - Ganti dengan URL Web App GAS milik Anda
          */
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzluXuYZYoWSG7oNnbAN_2DS7e5aekD2yLmhEN93DF0X-nWWnAaU48w8htYgShH81KJaw/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyVClhKVmR5Is-kHwEDM_LGTpIOEJvqJ6MXdDQo3bcdN6YDXE-ZbBjnyXgrg9Rj39yapQ/exec"; 
         
         // State Management
         let appData = {
-            settings: { kombi_per_100: 0, manol_per_kg: 0, harga_gabah: 0 },
             lahan: {} 
         };
         
@@ -499,9 +487,10 @@
         async function fetchAPI(payload) {
             const getMockResponse = (p) => {
                 console.warn("Menggunakan mode simulasi lokal untuk aksi:", p.action);
-                if (p.action === 'get_data') return { settings: appData.settings, lahan: appData.lahan };
+                if (p.action === 'get_data') return { lahan: appData.lahan };
                 if (p.action === 'save_lahan') return { success: true, id: "LHN_TEMP_" + Date.now() };
                 if (p.action === 'save_timbangan') return { success: true, id: p.id || "TMB_TEMP_" + Date.now() };
+                if (p.action === 'save_settings') return { success: true };
                 return { success: true };
             };
 
@@ -523,7 +512,6 @@
             } catch (error) {
                 showLoader(false);
                 showToast("Koneksi server gagal. Beralih ke Mode Lokal.", true);
-                console.error("Fetch API Error:", error);
                 return getMockResponse(payload);
             }
         }
@@ -531,29 +519,12 @@
         async function fetchDataAwal() {
             const res = await fetchAPI({ action: "get_data" });
             if (res) {
-                appData.settings = res.settings || { kombi_per_100: 0, manol_per_kg: 0, harga_gabah: 0 };
                 appData.lahan = res.lahan || {};
                 
-                if (res.timbangan && Object.keys(res.timbangan).length > 0) {
-                    const tempLahanId = "LHN_MIGRASI_LAMA";
-                    if (!appData.lahan[tempLahanId]) {
-                        appData.lahan[tempLahanId] = {
-                            nama: "Data Lahan Lama (Migrasi)",
-                            timestamp: new Date().toISOString(),
-                            timbangan: res.timbangan
-                        };
-                        fetchAPI({ action: "migrate_lama", lahan_id: tempLahanId, data: appData.lahan[tempLahanId] });
-                        
-                        if (!activeLahanId) {
-                            activeLahanId = tempLahanId;
-                            localStorage.setItem("activeLahanId", activeLahanId);
-                        }
-                    }
+                // Mencegah error jika data kosong / Lahan baru belum punya settings
+                if (activeLahanId && appData.lahan[activeLahanId]) {
+                    populateSettingsForm(activeLahanId);
                 }
-
-                document.getElementById("setting-harga-gabah").value = appData.settings.harga_gabah || 0;
-                document.getElementById("setting-kombi").value = appData.settings.kombi_per_100 || 0;
-                document.getElementById("setting-manol").value = appData.settings.manol_per_kg || 0;
                 
                 renderDaftarLahan();
                 kalkulasiDanRender();
@@ -567,7 +538,13 @@
 
             const res = await fetchAPI({ action: "save_lahan", nama: nama });
             if (res && res.success) {
-                appData.lahan[res.id] = { nama: nama, timestamp: new Date().toISOString(), timbangan: {} };
+                // Saat lahan baru dibuat, berikan setting kosong/default
+                appData.lahan[res.id] = { 
+                    nama: nama, 
+                    timestamp: new Date().toISOString(), 
+                    timbangan: {},
+                    settings: { harga_gabah: 0, kombi_per_100: 0, manol_per_kg: 0 }
+                };
                 document.getElementById("input-nama-lahan").value = "";
                 showToast("Lahan baru berhasil dibuat!");
                 
@@ -578,6 +555,10 @@
         function pilihLahan(id) {
             activeLahanId = id;
             localStorage.setItem("activeLahanId", id);
+            
+            // Perbarui Formulir Pengaturan Sesuai Lahan Aktif
+            populateSettingsForm(id);
+
             renderDaftarLahan();
             kalkulasiDanRender();
             showToast("Lahan aktif diubah!");
@@ -594,6 +575,8 @@
                 if (activeLahanId === id) {
                     activeLahanId = null;
                     localStorage.removeItem("activeLahanId");
+                    // Kosongkan form setting karena lahan dihapus
+                    populateSettingsForm(null);
                 }
                 showToast("Lahan dihapus!");
                 renderDaftarLahan();
@@ -629,18 +612,65 @@
             document.getElementById("list-lahan").innerHTML = html;
 
             const namaLahanAktif = activeLahanId && appData.lahan[activeLahanId] ? appData.lahan[activeLahanId].nama : "Belum Dipilih (Buka Menu Lahan)";
+            
+            // Terapkan label ke semua menu yang butuh informasi lahan aktif
             document.getElementById("label-lahan-dashboard").innerText = namaLahanAktif;
             document.getElementById("label-lahan-input").innerText = namaLahanAktif;
-            
-            // Update nama lahan di tab Riwayat Baru
             if(document.getElementById("label-lahan-riwayat")) document.getElementById("label-lahan-riwayat").innerText = namaLahanAktif;
+            if(document.getElementById("label-lahan-pengaturan")) document.getElementById("label-lahan-pengaturan").innerText = namaLahanAktif;
+        }
+
+        // --- FUNGSI PENGATURAN BIAYA SPESIFIK LAHAN ---
+        function populateSettingsForm(id) {
+            if(id && appData.lahan[id]) {
+                const lSettings = appData.lahan[id].settings || { harga_gabah: 0, kombi_per_100: 0, manol_per_kg: 0 };
+                document.getElementById("setting-harga-gabah").value = lSettings.harga_gabah || 0;
+                document.getElementById("setting-kombi").value = lSettings.kombi_per_100 || 0;
+                document.getElementById("setting-manol").value = lSettings.manol_per_kg || 0;
+            } else {
+                document.getElementById("setting-harga-gabah").value = 0;
+                document.getElementById("setting-kombi").value = 0;
+                document.getElementById("setting-manol").value = 0;
+            }
+        }
+
+        async function simpanPengaturan() {
+            if (!activeLahanId || !appData.lahan[activeLahanId]) {
+                showToast("Pilih Lahan terlebih dahulu sebelum menyimpan pengaturan!", true);
+                switchTab('lahan', document.querySelectorAll('.nav-item')[3]);
+                return;
+            }
+
+            const hargaGabah = parseFloat(document.getElementById("setting-harga-gabah").value) || 0;
+            const kombi = parseFloat(document.getElementById("setting-kombi").value) || 0;
+            const manol = parseFloat(document.getElementById("setting-manol").value) || 0;
+
+            const res = await fetchAPI({ 
+                action: "save_settings", 
+                lahan_id: activeLahanId, // Kirim ID Lahan ke Backend
+                kombi: kombi, 
+                manol: manol, 
+                harga_gabah: hargaGabah 
+            });
+
+            if (res && res.success) {
+                showToast("Pengaturan untuk lahan ini berhasil diperbarui!");
+                
+                // Simpan pengaturan ini HANYA untuk lahan yang sedang aktif
+                appData.lahan[activeLahanId].settings = {
+                    harga_gabah: hargaGabah,
+                    kombi_per_100: kombi,
+                    manol_per_kg: manol
+                };
+                
+                kalkulasiDanRender();
+            }
         }
 
         // --- FUNGSI TIMBANGAN ---
         async function simpanTimbangan() {
             if (!activeLahanId || !appData.lahan[activeLahanId]) {
                 showToast("Pilih Lahan terlebih dahulu di Menu Lahan!", true);
-                // Indeks Lahan ada di urutan ke-4 (indeks array 3)
                 switchTab('lahan', document.querySelectorAll('.nav-item')[3]);
                 return;
             }
@@ -680,8 +710,7 @@
             editModeId = id;
             document.getElementById("input-berat").value = data.berat;
             
-            // Indeks Input bergeser ke tengah (indeks array 2)
-            const navInput = document.querySelectorAll('.nav-item')[2];
+            const navInput = document.querySelectorAll('.nav-item')[2]; // Index ke 2 karena input ada di tengah
             switchTab('input', navInput);
             
             const btnSimpan = document.getElementById("btn-simpan");
@@ -710,19 +739,12 @@
         async function hapusTimbangan(id) {
             if(!confirm("Yakin ingin menghapus data timbangan ini?")) return;
             
-            if (editModeId === id) {
-                batalEdit();
-            }
+            if (editModeId === id) batalEdit();
             
             const res = await fetchAPI({ action: "delete_timbangan", lahan_id: activeLahanId, id: id });
             
             if (res && res.success) {
                 showToast("Data berhasil dihapus!");
-                delete appData.lahan[activeLahanId].timbangan[id];
-                kalkulasiDanRender();
-            } else if (res && res.error) {
-                showToast("Peringatan Server: " + res.error, true);
-                console.error("Error penghapusan:", res.error);
                 delete appData.lahan[activeLahanId].timbangan[id];
                 kalkulasiDanRender();
             } else {
@@ -732,28 +754,16 @@
             }
         }
 
-        async function simpanPengaturan() {
-            const hargaGabah = parseFloat(document.getElementById("setting-harga-gabah").value) || 0;
-            const kombi = parseFloat(document.getElementById("setting-kombi").value) || 0;
-            const manol = parseFloat(document.getElementById("setting-manol").value) || 0;
-
-            const res = await fetchAPI({ action: "save_settings", kombi: kombi, manol: manol, harga_gabah: hargaGabah });
-            if (res && res.success) {
-                showToast("Pengaturan diperbarui!");
-                appData.settings.harga_gabah = hargaGabah;
-                appData.settings.kombi_per_100 = kombi;
-                appData.settings.manol_per_kg = manol;
-                kalkulasiDanRender();
-            }
-        }
-
         // --- KALKULASI & RENDER DOM ---
         function kalkulasiDanRender() {
             let totalBerat = 0;
             let jumlahTimbangan = 0;
 
-            const timbanganAktif = (activeLahanId && appData.lahan[activeLahanId] && appData.lahan[activeLahanId].timbangan) 
-                                   ? appData.lahan[activeLahanId].timbangan : {};
+            const lahanAktif = (activeLahanId && appData.lahan[activeLahanId]) ? appData.lahan[activeLahanId] : null;
+            const timbanganAktif = (lahanAktif && lahanAktif.timbangan) ? lahanAktif.timbangan : {};
+            
+            // Tarik SETTING KHUSUS Lahan Aktif untuk dihitung
+            const settingLahan = (lahanAktif && lahanAktif.settings) ? lahanAktif.settings : { harga_gabah: 0, kombi_per_100: 0, manol_per_kg: 0 };
 
             const dataArray = Object.values(timbanganAktif);
             jumlahTimbangan = dataArray.length;
@@ -762,14 +772,13 @@
                 totalBerat += parseFloat(item.berat);
             });
 
-            const pendapatanKotor = totalBerat * (appData.settings.harga_gabah || 0);
-            const biayaKombi = (totalBerat / 100) * (appData.settings.kombi_per_100 || 0);
-            const biayaManol = (totalBerat / 100) * (appData.settings.manol_per_kg || 0);
+            const pendapatanKotor = totalBerat * (settingLahan.harga_gabah || 0);
+            const biayaKombi = (totalBerat / 100) * (settingLahan.kombi_per_100 || 0);
+            const biayaManol = (totalBerat / 100) * (settingLahan.manol_per_kg || 0);
 
             document.getElementById("val-total-berat").innerText = Math.round(totalBerat) + " Kg";
             document.getElementById("val-total-berat-input").innerText = Math.round(totalBerat) + " Kg";
             
-            // Update total di tab Riwayat Baru
             if(document.getElementById("val-total-berat-riwayat")) document.getElementById("val-total-berat-riwayat").innerText = Math.round(totalBerat) + " Kg";
             
             document.getElementById("val-pendapatan-kotor").innerText = formatRupiah(pendapatanKotor);
@@ -844,7 +853,6 @@
 
             document.getElementById('tabel-input-grup').innerHTML = htmlInput || "<p class='text-center' style='margin-top: 20px; font-size: 14px; color: #666;'>Lahan kosong. Belum ada data timbangan.</p>";
             
-            // Render juga ke tabel di Menu Riwayat Baru
             if(document.getElementById('tabel-riwayat-full')) {
                 document.getElementById('tabel-riwayat-full').innerHTML = htmlInput || "<p class='text-center' style='margin-top: 20px; font-size: 14px; color: #666;'>Lahan kosong. Belum ada data timbangan.</p>";
             }
@@ -871,9 +879,11 @@
             const jumlahTimbangan = dataAsc.length;
             dataAsc.forEach(item => totalBerat += parseFloat(item.berat));
 
-            const pendapatanKotor = totalBerat * (appData.settings.harga_gabah || 0);
-            const biayaKombi = (totalBerat / 100) * (appData.settings.kombi_per_100 || 0);
-            const biayaManol = (totalBerat / 100) * (appData.settings.manol_per_kg || 0);
+            // Tarik setting khusus lahan ini saat cetak PDF
+            const settingLahan = lahan.settings || { harga_gabah: 0, kombi_per_100: 0, manol_per_kg: 0 };
+            const pendapatanKotor = totalBerat * (settingLahan.harga_gabah || 0);
+            const biayaKombi = (totalBerat / 100) * (settingLahan.kombi_per_100 || 0);
+            const biayaManol = (totalBerat / 100) * (settingLahan.manol_per_kg || 0);
 
             let printContent = `
                 <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;">
