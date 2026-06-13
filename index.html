@@ -505,6 +505,14 @@
                 });
                 const result = await response.json();
                 showLoader(false);
+                
+                // Cek khusus untuk Error 401 Permission Denied Firebase
+                if (result.error && (result.error.includes("Permission denied") || result.error.includes("401"))) {
+                    alert("⚠️ AKSES DATABASE DITOLAK (ERROR 401) ⚠️\n\nGoogle Apps Script tidak bisa mengakses Firebase. Silakan perbaiki Rules Firebase Anda:\n\n1. Buka Firebase Console\n2. Pilih Realtime Database\n3. Klik tab 'Rules' (Aturan)\n4. Ubah menjadi:\n\n{\n  \"rules\": {\n    \".read\": \"true\",\n    \".write\": \"true\"\n  }\n}\n\n5. Klik Publish / Terbitkan.\n\nSistem akan dialihkan ke Mode Lokal sementara waktu.");
+                    // Fallback ke mode lokal agar aplikasi tidak hang
+                    return getMockResponse(payload);
+                }
+                
                 return result;
             } catch (error) {
                 showLoader(false);
@@ -546,6 +554,16 @@
                 showToast("Lahan baru berhasil dibuat!");
                 
                 pilihLahan(res.id); 
+            } else if (res && res.error) {
+                // Menampilkan error dari Google Apps Script ke layar (Telah ditangani oleh alert khusus di fetchAPI)
+                if (res.error.includes("Permission denied") || res.error.includes("401")) {
+                     showToast("Gagal: Akses Firebase Ditolak (401)", true);
+                } else {
+                     showToast("Gagal: " + res.error, true);
+                }
+                console.error("Error Server GAS:", res.error);
+            } else {
+                showToast("Gagal menyambung ke server. Periksa URL GAS Anda.", true);
             }
         }
 
