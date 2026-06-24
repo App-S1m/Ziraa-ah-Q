@@ -109,10 +109,12 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Layout Khusus */
-        #view-input, #view-riwayat { height: calc(100vh - 70px); height: calc(100dvh - 70px); display: flex; flex-direction: column; }
+        #view-dashboard, #view-input, #view-riwayat { height: calc(100vh - 70px); height: calc(100dvh - 70px); display: flex; flex-direction: column; }
+        #view-dashboard > .lahan-indicator { flex-shrink: 0; margin-bottom: 10px; }
+        #view-dashboard > .card:nth-child(2) { flex-shrink: 0; margin-bottom: 10px; }
         #view-input > .card:first-child { flex-shrink: 0; margin-bottom: 10px; }
         #view-riwayat > .card:first-child { flex-shrink: 0; margin-bottom: 10px; }
-        #view-input > .card:last-child, #view-riwayat > .card:last-child { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 0; }
+        #view-dashboard > .card:last-child, #view-input > .card:last-child, #view-riwayat > .card:last-child { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 0; }
         #tabel-input-grup, #tabel-riwayat-full { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
         #tabel-input-grup::-webkit-scrollbar, #tabel-riwayat-full::-webkit-scrollbar { width: 5px; }
         #tabel-input-grup::-webkit-scrollbar-thumb, #tabel-riwayat-full::-webkit-scrollbar-thumb { background-color: var(--primary-light); border-radius: 5px; }
@@ -125,7 +127,7 @@
             #print-area { display: block !important; }
             table { width: 100%; border-collapse: collapse; }
             th, td { border: 1px solid #000 !important; padding: 4px; }
-            #view-input, #view-riwayat { height: auto; display: block; }
+            #view-dashboard, #view-input, #view-riwayat { height: auto; display: block; }
             #tabel-input-grup, #tabel-riwayat-full { overflow: visible; }
         }
 
@@ -415,7 +417,7 @@
         /**
          * KONFIGURASI URL GAS - Ganti dengan URL Web App GAS milik Anda
          */
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxIXG7JW4Wox-e3_w9efWrFRwN5MmpUQG3IxadCsU5yvFGk-cgUrOy9yIcK4HFOK7qzOg/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxSBO57aRf9rSWCRZck5_muSZdVzYmuxBup4Sz3YqGVpBN1Ub_RopqaVOzxJgfFPVcE/exec"; 
         
         let appData = { lahan: {} };
         let editModeId = null; 
@@ -455,12 +457,6 @@
             el.classList.add('active');
         }
 
-        function formatRupiah(angka) {
-            if(angka >= 1000000) return "Rp" + (angka/1000000).toFixed(1).replace('.0','') + "Jt";
-            else if(angka >= 1000) return "Rp" + (angka/1000).toFixed(1).replace('.0','') + "Rb";
-            return "Rp" + angka;
-        }
-
         function formatRupiahLengkap(angka) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
         }
@@ -470,7 +466,7 @@
             return dt.toLocaleString('id-ID', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
         }
 
-        // --- FUNGSI GEOLOCATION & COPY ---
+        // --- FUNGSI GEOLOCATION & COPY HYBRID ---
         function dapatkanLokasi() {
             if (navigator.geolocation) {
                 document.getElementById('lokasi-display').innerText = "Mencari koordinat lokasi GPS...";
@@ -494,10 +490,23 @@
 
         function copyKoordinat(lat, lng) {
             const text = `${lat}, ${lng}`;
+            
+            // Metode 1: API Clipboard Modern 
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("Koordinat disalin: " + text);
+                }).catch(err => {
+                    fallbackCopyTextToClipboard(text);
+                });
+            } else {
+                // Metode 2: Fallback ke ExecCommand untuk browser lama
+                fallbackCopyTextToClipboard(text);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
-            
-            // Hindari loncatan layar saat membuat textarea
             textArea.style.top = "0";
             textArea.style.left = "0";
             textArea.style.position = "fixed";
@@ -509,12 +518,12 @@
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
-                    showToast("Titik koordinat berhasil disalin!");
+                    showToast("Koordinat disalin: " + text);
                 } else {
-                    showToast("Gagal menyalin", true);
+                    showToast("Gagal menyalin otomatis, silakan salin manual.", true);
                 }
             } catch (err) {
-                showToast("Gagal menyalin", true);
+                showToast("Sistem perangkat Anda memblokir aksi salin.", true);
             }
             document.body.removeChild(textArea);
         }
@@ -570,7 +579,7 @@
                 console.warn("Menggunakan mode simulasi lokal untuk aksi:", p.action);
                 if (p.action === 'get_data') return { lahan: appData.lahan };
                 if (p.action === 'save_lahan') return { success: true, id: "LHN_TEMP_" + Date.now() };
-                if (p.action === 'edit_lahan' || p.action === 'edit_foto_lahan') return { success: true };
+                if (p.action === 'edit_lahan' || p.action === 'edit_foto_lahan' || p.action === 'edit_lokasi_lahan') return { success: true };
                 if (p.action === 'save_timbangan') return { success: true, id: p.id || "TMB_TEMP_" + Date.now() };
                 if (p.action === 'save_settings') return { success: true };
                 return { success: true };
@@ -673,6 +682,36 @@
             }
         }
 
+        async function updateLokasiLahan(id) {
+            if (navigator.geolocation) {
+                showLoader(true);
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const newLat = position.coords.latitude;
+                        const newLng = position.coords.longitude;
+                        
+                        const res = await fetchAPI({ action: "edit_lokasi_lahan", id: id, lat: newLat, lng: newLng });
+                        showLoader(false);
+                        if (res && res.success) {
+                            appData.lahan[id].lat = newLat;
+                            appData.lahan[id].lng = newLng;
+                            showToast("Lokasi lahan dikunci ke posisi Anda saat ini!");
+                            renderDaftarLahan();
+                        } else {
+                            showToast("Gagal menyimpan lokasi ke server.", true);
+                        }
+                    },
+                    (error) => {
+                        showLoader(false);
+                        showToast("Gagal akses GPS. Pastikan izin lokasi HP aktif.", true);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            } else {
+                alert("Browser/HP Anda tidak mendukung fitur lokasi GPS.");
+            }
+        }
+
         function gantiFotoLahan(id) {
             lahanIdUntukGantiFoto = id;
             document.getElementById('edit-foto-input').click();
@@ -689,6 +728,7 @@
                         appData.lahan[lahanIdUntukGantiFoto].foto = base64Str;
                         showToast("Foto Lahan berhasil diperbarui!");
                         renderDaftarLahan();
+                        if (activeLahanId === lahanIdUntukGantiFoto) updateHeaderLahanAktif(appData.lahan[lahanIdUntukGantiFoto]);
                     }
                     document.getElementById('edit-foto-input').value = "";
                 });
@@ -739,11 +779,16 @@
                             <small style="color:#777; font-size: 11px;">Dibuat: ${formatTanggal(l.timestamp)}</small>
                             ${l.lat && l.lng ? `
                             <br>
-                            <div style="display: flex; gap: 4px; margin-top: 4px; align-items: center;">
-                                <a href="https://maps.google.com/?q=${l.lat},${l.lng}" target="_blank" style="font-size: 10px; color: #1565c0; text-decoration: none; padding: 3px 6px; background: #e3f2fd; border-radius: 4px;"><i class="fas fa-map-marker-alt"></i> Lihat Peta</a>
-                                <button onclick="copyKoordinat('${l.lat}', '${l.lng}')" style="background: #eceff1; border: none; color: #455a64; padding: 3px 6px; border-radius: 4px; font-size: 10px; cursor: pointer; display: flex; align-items: center; gap: 3px;"><i class="fas fa-copy"></i> Salin</button>
+                            <div style="display: flex; gap: 4px; margin-top: 4px; align-items: center; flex-wrap: wrap;">
+                                <a href="https://maps.google.com/?q=${l.lat},${l.lng}" target="_blank" style="font-size: 10px; color: #1565c0; text-decoration: none; padding: 4px 6px; background: #e3f2fd; border-radius: 4px; font-weight: bold;"><i class="fas fa-map-marker-alt"></i> Peta</a>
+                                <button onclick="copyKoordinat('${l.lat}', '${l.lng}')" style="background: #eceff1; border: 1px solid #cfd8dc; color: #455a64; padding: 4px 6px; border-radius: 4px; font-size: 10px; cursor: pointer; display: flex; align-items: center; gap: 3px; font-weight: bold;"><i class="fas fa-copy"></i> Salin ${l.lat.toFixed(4)}, ${l.lng.toFixed(4)}</button>
                             </div>
-                            ` : ''}
+                            ` : `
+                            <br>
+                            <div style="margin-top: 4px;">
+                                <span style="font-size: 10px; color: #999; font-style: italic;">Lokasi belum diatur</span>
+                            </div>
+                            `}
                         </div>
                         
                         <div style="display:flex; flex-direction: column; gap:5px;">
@@ -752,8 +797,9 @@
                                 `<button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="pilihLahan('${l.id}')">Pilih</button>`}
                             
                             <div style="display: flex; gap: 4px; justify-content: flex-end;">
-                                <button class="btn" style="background: #f57c00; padding: 4px 8px; font-size: 11px; width: auto;" onclick="editNamaLahan('${l.id}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger" style="padding: 4px 8px; font-size: 11px; width: auto;" onclick="hapusLahan('${l.id}')"><i class="fas fa-trash"></i></button>
+                                <button class="btn" style="background: #1976d2; padding: 4px 8px; font-size: 11px; width: auto;" onclick="updateLokasiLahan('${l.id}')" title="Kunci Lokasi GPS Saat Ini"><i class="fas fa-map-marker-alt"></i></button>
+                                <button class="btn" style="background: #f57c00; padding: 4px 8px; font-size: 11px; width: auto;" onclick="editNamaLahan('${l.id}')" title="Edit Nama"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger" style="padding: 4px 8px; font-size: 11px; width: auto;" onclick="hapusLahan('${l.id}')" title="Hapus"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                     </div>`;
@@ -775,23 +821,18 @@
             if(document.getElementById("label-lahan-riwayat")) document.getElementById("label-lahan-riwayat").innerText = nama;
             if(document.getElementById("label-lahan-pengaturan")) document.getElementById("label-lahan-pengaturan").innerText = nama;
 
-            // Foto Besar di Dashboard
+            // Foto Besar di Dashboard Atas
             const dashboardFotoEl = document.getElementById("dashboard-foto-lahan");
             if (dashboardFotoEl) {
                 if (foto) dashboardFotoEl.innerHTML = `<img src="${foto}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
                 else dashboardFotoEl.innerHTML = `<i class="fas fa-image"></i>`;
             }
 
-            // Foto Lebar di Dashboard Bawah (Baru)
-            const dashboardFotoBawah = document.getElementById("dashboard-foto-lahan-bawah");
-            if (dashboardFotoBawah) {
-                if (foto) {
-                    dashboardFotoBawah.innerHTML = `<img src="${foto}" style="width: 100%; height: 100%; object-fit: cover;">`;
-                    dashboardFotoBawah.style.border = "none";
-                } else {
-                    dashboardFotoBawah.innerHTML = `<div style="text-align: center; color: #777;"><i class="fas fa-image" style="font-size: 40px; margin-bottom: 8px; display: block;"></i><span style="font-size: 13px;">Foto belum tersedia</span></div>`;
-                    dashboardFotoBawah.style.border = "2px dashed var(--primary-light)";
-                }
+            // Dokumentasi Foto Bawah Dashboard
+            const dashboardFotoBawahEl = document.getElementById("dashboard-foto-lahan-bawah");
+            if (dashboardFotoBawahEl) {
+                if (foto) dashboardFotoBawahEl.innerHTML = `<img src="${foto}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                else dashboardFotoBawahEl.innerHTML = `<div style="text-align: center; color: #777;"><i class="fas fa-image" style="font-size: 40px; margin-bottom: 8px; display: block;"></i><span style="font-size: 13px;">Foto belum tersedia</span></div>`;
             }
 
             // Thumbnail Foto di Menu Input, Riwayat, dan Setting
